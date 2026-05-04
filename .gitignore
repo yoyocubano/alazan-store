@@ -1,0 +1,7 @@
+.DS_Store
+*.py
+*.sh
+*.applescript
+temp.png
+temp_rec.png
+cleanup_images.py

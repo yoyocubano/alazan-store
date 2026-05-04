@@ -3,331 +3,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ALAZAN STORE | Official E-Commerce</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=6">
+    <title>Alazan Store | Premium Gaming Apparel</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
+    <!-- CUSTOM CURSOR -->
+    <div class="cursor"></div>
+
+    <!-- HEADER -->
     <header>
-        <div class="menu-toggle">☰ MENU</div>
-        <div class="logo">ALAZAN</div>
+        <div class="menu-toggle" id="open-menu">MENU</div>
+        <div class="header-brand">
+            <div class="logo">ALAZAN</div>
+        </div>
         <div class="nav-links">
             <a href="#">SEARCH</a>
-            <a href="#">CART (0)</a>
+            <a href="#" id="open-cart">CART (<span id="nav-cart-count">0</span>)</a>
         </div>
     </header>
 
-    <main>
-        <section id="collection" class="collection">
-            <div class="products-grid">
-                
-                <!-- Producto 1 -->
-                <div class="product-card" id="p1">
-                    <div class="zalando-gallery">
-                        <div class="main-image">
-                            <div class="image-wrapper t-shirt-composite">
-                                <div class="color-overlay" style="background-color: #222222;"></div>
-                                <img src="graphic_1.png" class="shirt-graphic" alt="Noob Saibot Graphic">
-                                <img src="zara_tshirt_transparent.png?v=1" class="fabric-texture" alt="T-Shirt Texture">
-                            </div>
-                        </div>
-                        <div class="thumbnails">
-                            <div class="thumb-item active" onclick="changeView('p1', 'front', this)">
-                                <img src="zara_tshirt_transparent.png?v=1" alt="Frontal">
-                            </div>
-                            <div class="thumb-item" onclick="changeView('p1', 'back', this)">
-                                <img src="zara_tshirt_back_transparent.png?v=1" alt="Dorsal">
-                            </div>
-                            <div class="thumb-item" onclick="changeView('p1', 'details', this)">
-                                <div style="position:relative; width:100%; height:100%;">
-                                    <img src="graphic_1.png" style="position:absolute; width:150%; top:50%; left:50%; transform:translate(-50%,-50%); z-index:2;">
-                                    <img src="zara_cotton_texture.png" style="position:absolute; width:100%; height:100%; object-fit:cover; mix-blend-mode:multiply; opacity:0.5; z-index:3;">
-                                </div>
-                            </div>
-                            <div class="thumb-item" onclick="changeView('p1', 'texture', this)">
-                                <div style="position:relative; width:100%; height:100%;">
-                                    <div class="thumb-color-sync" style="position:absolute; width:100%; height:100%; background:#222222;"></div>
-                                    <img src="zara_cotton_texture.png" style="position:absolute; width:100%; height:100%; object-fit:cover; mix-blend-mode:multiply; z-index:2;">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="product-info-container">
-                        <div class="product-meta">
-                            <div class="product-info">
-                                <h4>SHADOW CLONE</h4>
-                                <p>Noob Saibot</p>
-                            </div>
-                            <div class="product-price">39.95 EUR</div>
-                        </div>
-                        <div class="color-picker">
-                            <div class="swatch" data-color="#ffffff" style="background: #ffffff;" title="Blanco"></div>
-                            <div class="swatch active" data-color="#222222" style="background: #222222;" title="Negro"></div>
-                            <div class="swatch" data-color="#888888" style="background: #888888;" title="Gris"></div>
-                            <div class="swatch" data-color="#c80000" style="background: #c80000;" title="Rojo"></div>
-                            <div class="swatch" data-color="#004d26" style="background: #004d26;" title="Verde"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Producto 2 -->
-                <div class="product-card" id="p2">
-                    <div class="zalando-gallery">
-                        <div class="main-image">
-                            <div class="image-wrapper t-shirt-composite">
-                                <div class="color-overlay" style="background-color: #222222;"></div>
-                                <img src="graphic_2.png" class="shirt-graphic" alt="Erron Black Graphic">
-                                <img src="zara_tshirt_transparent.png?v=1" class="fabric-texture" alt="T-Shirt Texture">
-                            </div>
-                        </div>
-                        <div class="thumbnails">
-                            <div class="thumb-item active" onclick="changeView('p2', 'front', this)">
-                                <img src="zara_tshirt_transparent.png?v=1" alt="Frontal">
-                            </div>
-                            <div class="thumb-item" onclick="changeView('p2', 'back', this)">
-                                <img src="zara_tshirt_back_transparent.png?v=1" alt="Dorsal">
-                            </div>
-                            <div class="thumb-item" onclick="changeView('p2', 'details', this)">
-                                <div style="position:relative; width:100%; height:100%;">
-                                    <img src="graphic_2.png" style="position:absolute; width:150%; top:50%; left:50%; transform:translate(-50%,-50%); z-index:2;">
-                                    <img src="zara_cotton_texture.png" style="position:absolute; width:100%; height:100%; object-fit:cover; mix-blend-mode:multiply; opacity:0.5; z-index:3;">
-                                </div>
-                            </div>
-                            <div class="thumb-item" onclick="changeView('p2', 'texture', this)">
-                                <div style="position:relative; width:100%; height:100%;">
-                                    <div class="thumb-color-sync" style="position:absolute; width:100%; height:100%; background:#222222;"></div>
-                                    <img src="zara_cotton_texture.png" style="position:absolute; width:100%; height:100%; object-fit:cover; mix-blend-mode:multiply; z-index:2;">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="product-info-container">
-                        <div class="product-meta">
-                            <div class="product-info">
-                                <h4>GUNSLINGER</h4>
-                                <p>Erron Black</p>
-                            </div>
-                            <div class="product-price">39.95 EUR</div>
-                        </div>
-                        <div class="color-picker">
-                            <div class="swatch" data-color="#ffffff" style="background: #ffffff;" title="Blanco"></div>
-                            <div class="swatch active" data-color="#222222" style="background: #222222;" title="Negro"></div>
-                            <div class="swatch" data-color="#888888" style="background: #888888;" title="Gris"></div>
-                            <div class="swatch" data-color="#c80000" style="background: #c80000;" title="Rojo"></div>
-                            <div class="swatch" data-color="#004d26" style="background: #004d26;" title="Verde"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Producto 3 -->
-                <div class="product-card" id="p3">
-                    <div class="zalando-gallery">
-                        <div class="main-image">
-                            <div class="image-wrapper t-shirt-composite">
-                                <div class="color-overlay" style="background-color: #222222;"></div>
-                                <img src="graphic_3.png" class="shirt-graphic" alt="Sindel Graphic">
-                                <img src="zara_tshirt_transparent.png?v=1" class="fabric-texture" alt="T-Shirt Texture">
-                            </div>
-                        </div>
-                        <div class="thumbnails">
-                            <div class="thumb-item active" onclick="changeView('p3', 'front', this)">
-                                <img src="zara_tshirt_transparent.png?v=1" alt="Frontal">
-                            </div>
-                            <div class="thumb-item" onclick="changeView('p3', 'back', this)">
-                                <img src="zara_tshirt_back_transparent.png?v=1" alt="Dorsal">
-                            </div>
-                            <div class="thumb-item" onclick="changeView('p3', 'details', this)">
-                                <div style="position:relative; width:100%; height:100%;">
-                                    <img src="graphic_3.png" style="position:absolute; width:150%; top:50%; left:50%; transform:translate(-50%,-50%); z-index:2;">
-                                    <img src="zara_cotton_texture.png" style="position:absolute; width:100%; height:100%; object-fit:cover; mix-blend-mode:multiply; opacity:0.5; z-index:3;">
-                                </div>
-                            </div>
-                            <div class="thumb-item" onclick="changeView('p3', 'texture', this)">
-                                <div style="position:relative; width:100%; height:100%;">
-                                    <div class="thumb-color-sync" style="position:absolute; width:100%; height:100%; background:#222222;"></div>
-                                    <img src="zara_cotton_texture.png" style="position:absolute; width:100%; height:100%; object-fit:cover; mix-blend-mode:multiply; z-index:2;">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="product-info-container">
-                        <div class="product-meta">
-                            <div class="product-info">
-                                <h4>BANSHEE QUEEN</h4>
-                                <p>Sindel</p>
-                            </div>
-                            <div class="product-price">39.95 EUR</div>
-                        </div>
-                        <div class="color-picker">
-                            <div class="swatch" data-color="#ffffff" style="background: #ffffff;" title="Blanco"></div>
-                            <div class="swatch active" data-color="#222222" style="background: #222222;" title="Negro"></div>
-                            <div class="swatch" data-color="#888888" style="background: #888888;" title="Gris"></div>
-                            <div class="swatch" data-color="#c80000" style="background: #c80000;" title="Rojo"></div>
-                            <div class="swatch" data-color="#4a0080" style="background: #4a0080;" title="Morado"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Producto 4 -->
-                <div class="product-card" id="p4">
-                    <div class="zalando-gallery">
-                        <div class="main-image">
-                            <div class="image-wrapper t-shirt-composite">
-                                <div class="color-overlay" style="background-color: #222222;"></div>
-                                <img src="graphic_4.png" class="shirt-graphic" alt="PS Buttons Graphic">
-                                <img src="zara_tshirt_transparent.png?v=1" class="fabric-texture" alt="T-Shirt Texture">
-                            </div>
-                        </div>
-                        <div class="thumbnails">
-                            <div class="thumb-item active" onclick="changeView('p4', 'front', this)">
-                                <img src="zara_tshirt_transparent.png?v=1" alt="Frontal">
-                            </div>
-                            <div class="thumb-item" onclick="changeView('p4', 'back', this)">
-                                <img src="zara_tshirt_back_transparent.png?v=1" alt="Dorsal">
-                            </div>
-                            <div class="thumb-item" onclick="changeView('p4', 'details', this)">
-                                <div style="position:relative; width:100%; height:100%;">
-                                    <img src="graphic_4.png" style="position:absolute; width:150%; top:50%; left:50%; transform:translate(-50%,-50%); z-index:2;">
-                                    <img src="zara_cotton_texture.png" style="position:absolute; width:100%; height:100%; object-fit:cover; mix-blend-mode:multiply; opacity:0.5; z-index:3;">
-                                </div>
-                            </div>
-                            <div class="thumb-item" onclick="changeView('p4', 'texture', this)">
-                                <div style="position:relative; width:100%; height:100%;">
-                                    <div class="thumb-color-sync" style="position:absolute; width:100%; height:100%; background:#222222;"></div>
-                                    <img src="zara_cotton_texture.png" style="position:absolute; width:100%; height:100%; object-fit:cover; mix-blend-mode:multiply; z-index:2;">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="product-info-container">
-                        <div class="product-meta">
-                            <div class="product-info">
-                                <h4>PLAYER ONE</h4>
-                                <p>Arcade Edition</p>
-                            </div>
-                            <div class="product-price">39.95 EUR</div>
-                        </div>
-                        <div class="color-picker">
-                            <div class="swatch" data-color="#ffffff" style="background: #ffffff;" title="Blanco"></div>
-                            <div class="swatch active" data-color="#222222" style="background: #222222;" title="Negro"></div>
-                            <div class="swatch" data-color="#888888" style="background: #888888;" title="Gris"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Producto 5 -->
-                <div class="product-card" id="p5">
-                    <div class="zalando-gallery">
-                        <div class="main-image">
-                            <div class="image-wrapper t-shirt-composite">
-                                <div class="color-overlay" style="background-color: #222222;"></div>
-                                <img src="graphic_5.png" class="shirt-graphic" alt="Jax Graphic">
-                                <img src="zara_tshirt_transparent.png?v=1" class="fabric-texture" alt="T-Shirt Texture">
-                            </div>
-                        </div>
-                        <div class="thumbnails">
-                            <div class="thumb-item active" onclick="changeView('p5', 'front', this)">
-                                <img src="zara_tshirt_transparent.png?v=1" alt="Frontal">
-                            </div>
-                            <div class="thumb-item" onclick="changeView('p5', 'back', this)">
-                                <img src="zara_tshirt_back_transparent.png?v=1" alt="Dorsal">
-                            </div>
-                            <div class="thumb-item" onclick="changeView('p5', 'details', this)">
-                                <div style="position:relative; width:100%; height:100%;">
-                                    <img src="graphic_5.png" style="position:absolute; width:150%; top:50%; left:50%; transform:translate(-50%,-50%); z-index:2;">
-                                    <img src="zara_cotton_texture.png" style="position:absolute; width:100%; height:100%; object-fit:cover; mix-blend-mode:multiply; opacity:0.5; z-index:3;">
-                                </div>
-                            </div>
-                            <div class="thumb-item" onclick="changeView('p5', 'texture', this)">
-                                <div style="position:relative; width:100%; height:100%;">
-                                    <div class="thumb-color-sync" style="position:absolute; width:100%; height:100%; background:#222222;"></div>
-                                    <img src="zara_cotton_texture.png" style="position:absolute; width:100%; height:100%; object-fit:cover; mix-blend-mode:multiply; z-index:2;">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="product-info-container">
-                        <div class="product-meta">
-                            <div class="product-info">
-                                <h4>HEAVY METAL</h4>
-                                <p>Jax Briggs</p>
-                            </div>
-                            <div class="product-price">39.95 EUR</div>
-                        </div>
-                        <div class="color-picker">
-                            <div class="swatch" data-color="#ffffff" style="background: #ffffff;" title="Blanco"></div>
-                            <div class="swatch active" data-color="#222222" style="background: #222222;" title="Negro"></div>
-                            <div class="swatch" data-color="#888888" style="background: #888888;" title="Gris"></div>
-                            <div class="swatch" data-color="#c80000" style="background: #c80000;" title="Rojo"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Producto 6 -->
-                <div class="product-card" id="p6">
-                    <div class="zalando-gallery">
-                        <div class="main-image">
-                            <div class="image-wrapper t-shirt-composite">
-                                <div class="color-overlay" style="background-color: #222222;"></div>
-                                <img src="graphic_6.png" class="shirt-graphic" alt="Kotal Kahn Graphic">
-                                <img src="zara_tshirt_transparent.png?v=1" class="fabric-texture" alt="T-Shirt Texture">
-                            </div>
-                        </div>
-                        <div class="thumbnails">
-                            <div class="thumb-item active" onclick="changeView('p6', 'front', this)">
-                                <img src="zara_tshirt_transparent.png?v=1" alt="Frontal">
-                            </div>
-                            <div class="thumb-item" onclick="changeView('p6', 'back', this)">
-                                <img src="zara_tshirt_back_transparent.png?v=1" alt="Dorsal">
-                            </div>
-                            <div class="thumb-item" onclick="changeView('p6', 'details', this)">
-                                <div style="position:relative; width:100%; height:100%;">
-                                    <img src="graphic_6.png" style="position:absolute; width:150%; top:50%; left:50%; transform:translate(-50%,-50%); z-index:2;">
-                                    <img src="zara_cotton_texture.png" style="position:absolute; width:100%; height:100%; object-fit:cover; mix-blend-mode:multiply; opacity:0.5; z-index:3;">
-                                </div>
-                            </div>
-                            <div class="thumb-item" onclick="changeView('p6', 'texture', this)">
-                                <div style="position:relative; width:100%; height:100%;">
-                                    <div class="thumb-color-sync" style="position:absolute; width:100%; height:100%; background:#222222;"></div>
-                                    <img src="zara_cotton_texture.png" style="position:absolute; width:100%; height:100%; object-fit:cover; mix-blend-mode:multiply; z-index:2;">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="product-info-container">
-                        <div class="product-meta">
-                            <div class="product-info">
-                                <h4>SUN GOD</h4>
-                                <p>Kotal Kahn</p>
-                            </div>
-                            <div class="product-price">39.95 EUR</div>
-                        </div>
-                        <div class="color-picker">
-                            <div class="swatch" data-color="#ffffff" style="background: #ffffff;" title="Blanco"></div>
-                            <div class="swatch active" data-color="#222222" style="background: #222222;" title="Negro"></div>
-                            <div class="swatch" data-color="#c89600" style="background: #c89600;" title="Amarillo Ocre"></div>
-                            <div class="swatch" data-color="#ff7300" style="background: #ff7300;" title="Naranja"></div>
-                            <div class="swatch" data-color="#004d26" style="background: #004d26;" title="Verde"></div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-    </main>
-
-    <footer>
-        <div class="footer-bottom">
-            <div class="socials">
-                <a href="#">INSTAGRAM</a>
-                <a href="#">TIKTOK</a>
-                <a href="#">TWITTER</a>
-            </div>
-            <p>ALAZAN STORE. ALL RIGHTS RESERVED.</p>
+    <!-- OFF-CANVAS MENU (ZARA STYLE) -->
+    <div id="zara-menu" class="offcanvas-menu">
+        <div class="menu-header">
+            <div class="close-menu" id="close-menu">✕</div>
         </div>
-    </footer>
+        <div class="menu-content">
+            <ul class="main-categories">
+                <li><a href="javascript:void(0)" onclick="filterByFighter('ALL')">TODOS LOS PRODUCTOS</a></li>
+            </ul>
 
-    <script src="main.js?v=3"></script>
+            <div class="menu-accordion">
+                <div class="accordion-header">
+                    ROSTER <span class="plus">+</span>
+                </div>
+                <div class="accordion-body">
+                    <div class="section-title">MORTAL KOMBAT</div>
+                    <ul class="fighter-list" id="mk-roster"></ul>
+                    
+                    <div class="section-title" style="margin-top: 1.5rem;">STREET FIGHTER</div>
+                    <ul class="fighter-list" id="sf-roster"></ul>
+                    
+                    <div class="section-title" style="margin-top: 1.5rem;">DC UNIVERSE</div>
+                    <ul class="fighter-list" id="dc-roster"></ul>
+                </div>
+            </div>
+
+            <div class="menu-accordion">
+                <div class="accordion-header">
+                    TIPO DE PRENDA <span class="plus">+</span>
+                </div>
+                <div class="accordion-body">
+                    <ul class="garment-list">
+                        <li><a href="#">T-SHIRT OVERSIZE (240 GSM)</a></li>
+                        <li><a href="#">HOODIE PREMIUM</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="about-section" style="margin-top: 2rem;">
+                <div class="section-title">AYUDA</div>
+                <p>ENVÍOS Y DEVOLUCIONES<br>GUÍA DE TALLAS</p>
+                <p style="margin-top: 1rem;">CONTACTO<br><a href="mailto:info@alazanstore.com" class="contact-email">info@alazanstore.com</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- CART OFF-CANVAS -->
+    <div id="cart-menu" class="cart-offcanvas">
+        <div class="cart-header">
+            <h3>TU CESTA (<span id="cart-count">0</span>)</h3>
+            <div class="close-cart" id="close-cart">✕</div>
+        </div>
+        <div class="cart-items" id="cart-items">
+            <p class="empty-cart-msg">Tu cesta está vacía</p>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>TOTAL</span>
+                <span id="cart-total-price">0 ARS</span>
+            </div>
+            <button id="checkout-btn" class="checkout-btn" disabled>PROCEDER AL PAGO</button>
+        </div>
+    </div>
+
+    <!-- HERO SECTION -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <div class="hero-eyebrow" style="color: #000; font-weight: 700;">VISTE LO QUE JUEGAS</div>
+            <h1 class="hero-headline">
+                <span class="hero-line" style="font-size: clamp(4rem, 12vw, 10rem); line-height: 0.8;">ELITE</span>
+                <span class="hero-line hero-line--outline" style="font-size: clamp(4rem, 12vw, 10rem); line-height: 0.8;">COLLECTION</span>
+            </h1>
+            <div class="hero-sub" style="margin-top: 3.5rem;">HIGH GRAMMAGE PREMIUM COTTON<br>ARTISAN PRINTED IN ARGENTINA</div>
+            <a href="#collection" class="hero-cta">EXPLORAR CATÁLOGO</a>
+        </div>
+    </section>
+
+    <!-- COLLECTION GRID -->
+    <section class="collection" id="collection">
+        <div class="section-header">
+            <h3>NANO BANANA SERIES</h3>
+        </div>
+        <div class="products-grid" id="product-grid"></div>
+    </section>
+
+    <!-- CHECKOUT MODAL -->
+    <div id="checkout-modal" class="checkout-modal">
+        <div class="checkout-container">
+            <div class="checkout-header">
+                <h2>CHECKOUT SEGURO</h2>
+                <div class="close-checkout" id="close-checkout">✕</div>
+            </div>
+            <div class="checkout-body">
+                <div id="checkout-form">
+                    <div class="payment-methods">
+                        <div class="payment-method active" data-method="stripe">STRIPE</div>
+                        <div class="payment-method" data-method="paypal">PAYPAL</div>
+                        <div class="payment-method" data-method="revolut">REVOLUT</div>
+                    </div>
+                    <div class="form-group">
+                        <label>NOMBRE COMPLETO</label>
+                        <input type="text" placeholder="Abel Rodes">
+                    </div>
+                    <div class="form-group">
+                        <label>DIRECCIÓN DE ENVÍO</label>
+                        <input type="text" placeholder="Calle Corrientes 1234, CABA">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>CIUDAD</label>
+                            <input type="text" placeholder="Buenos Aires">
+                        </div>
+                        <div class="form-group small">
+                            <label>CP</label>
+                            <input type="text" placeholder="1425">
+                        </div>
+                    </div>
+                    <div class="secure-badge">
+                        🔒 PAGO ENCRIPTADO SSL · TOTAL A PAGAR: <span id="pay-amount">0 ARS</span>
+                    </div>
+                    <button id="final-pay-btn" class="pay-btn">CONFIRMAR Y PAGAR</button>
+                </div>
+
+                <div id="payment-processing" class="hidden">
+                    <div class="spinner"></div>
+                    <p>PROCESANDO PAGO...</p>
+                </div>
+
+                <div id="payment-success" class="hidden">
+                    <div class="success-icon">✓</div>
+                    <h3>¡GRACIAS POR TU COMPRA!</h3>
+                    <p>Hemos enviado un email con los detalles de tu pedido.</p>
+                    <button id="continue-shopping" class="continue-btn">VOLVER A LA TIENDA</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
 </body>
 </html>
