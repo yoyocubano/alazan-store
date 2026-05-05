@@ -423,25 +423,6 @@ header {
     background: transparent;
 }
 
-.color-overlay {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 130%;
-    height: 130%;
-    object-fit: contain;
-    z-index: 1;
-    -webkit-mask-image: url('zara_tshirt_transparent.png?v=1');
-    mask-image: url('zara_tshirt_transparent.png?v=1');
-    -webkit-mask-size: contain;
-    mask-size: contain;
-    -webkit-mask-repeat: no-repeat;
-    mask-repeat: no-repeat;
-    -webkit-mask-position: center;
-    mask-position: center;
-    transition: background-color 0.3s ease;
-}
 
 .fabric-texture {
     position: absolute;
@@ -452,9 +433,14 @@ header {
     height: 130%;
     object-fit: contain;
     z-index: 2;
-    mix-blend-mode: multiply;
-    opacity: 0.3;
+    filter: brightness(0.15) contrast(1.2); /* Default Black */
+    transition: filter 0.3s ease;
     pointer-events: none;
+}
+
+.type-sweatshirt .fabric-texture,
+.type-hoodie .fabric-texture {
+    filter: brightness(0.12) contrast(1); /* Softer black for heavy fabrics */
 }
 
 .shirt-graphic {
@@ -502,7 +488,7 @@ header {
 .thumb-color-sync {
     width: 100%;
     height: 100%;
-    background: #222222;
+    background: #000000;
 }
 
 /* Product Info - Zara Style */
@@ -958,6 +944,68 @@ footer {
     font-size: 11px;
     font-weight: 600;
     cursor: pointer;
+}
+
+/* --- MENU TABS --- */
+.menu-tabs {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 40px;
+    margin-bottom: 2rem;
+    position: relative;
+    border-bottom: 1px solid #eee;
+}
+
+.tab-btn {
+    font-size: 0.75rem;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    padding: 10px 0;
+    cursor: pointer;
+    color: #999;
+    transition: color 0.3s ease;
+}
+
+.tab-btn.active {
+    color: #000;
+}
+
+.tab-indicator {
+    position: absolute;
+    bottom: -1px;
+    left: 40px;
+    width: 45px;
+    height: 1.5px;
+    background: #000;
+    transition: all 0.4s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.tab-pane {
+    display: none;
+    animation: fadeIn 0.4s ease;
+}
+
+.tab-pane.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.tab-info {
+    font-size: 0.7rem;
+    color: #888;
+    margin-top: 2rem;
+    line-height: 1.6;
+    font-style: italic;
+}
+
+.contact-email {
+    color: #000;
+    text-decoration: underline;
+    font-weight: 500;
 }
 
 @media (max-width: 768px) {
