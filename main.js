@@ -198,7 +198,7 @@ const LogisticsService = {
 
                     <p><strong>4. Precios y Modificaciones al Servicio</strong><br>
                     Los precios de nuestros productos están sujetos a cambios sin previo aviso.<br>
-                    Nos reservamos el derecho en cualquier momento de modificar o discontinuar el Servicio ( (o cualquier parte o contenido del mismo) sin previo aviso.<br>
+                    Nos reservamos el derecho en cualquier momento de modificar o discontinuar el Servicio (o cualquier parte o contenido del mismo) sin previo aviso.<br>
                     No seremos responsables ante ti ni ante ningún tercero por ninguna modificación, cambio de precio, suspensión o interrupción del Servicio.</p>
 
                     <p><strong>5. Exactitud de Facturación e Información de la Cuenta</strong><br>
@@ -320,8 +320,6 @@ const LogisticsService = {
             card.setAttribute('data-type', p.type);
             card.id = p.id;
 
-            const isHeavy = p.type === 'sweatshirt' || p.type === 'hoodie';
-            
             let graphicScale = 'scale(1)';
             let graphicMargin = '-5%';
 
@@ -435,6 +433,7 @@ const LogisticsService = {
             openMenuBtn.addEventListener('click', () => zaraMenu.classList.add('open'));
             closeMenuBtn.addEventListener('click', () => zaraMenu.classList.remove('open'));
             
+            // Init tab indicator
             const activeTab = document.querySelector('.tab-btn.active');
             const indicator = document.querySelector('.tab-indicator');
             if(activeTab && indicator) {
@@ -464,7 +463,7 @@ const LogisticsService = {
                     const headerOffset = 100;
                     const elementPosition = targetEl.getBoundingClientRect().top + window.scrollY;
                     window.scrollTo({ top: elementPosition - headerOffset, behavior: 'smooth' });
-                    if(zaraMenu) zaraMenu.classList.remove('open');
+                    zaraMenu?.classList.remove('open');
                 }
             });
         });
@@ -706,4 +705,3 @@ const LogisticsService = {
     }
 
 })();
-
