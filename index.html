@@ -33,8 +33,13 @@
             <div class="logo">ALAZAN</div>
         </div>
         <nav class="nav-links" role="navigation">
-            <a href="javascript:void(0)" aria-label="Buscar">SEARCH</a>
-            <a href="javascript:void(0)" id="open-cart" aria-label="Ver Carrito">CART (<span id="nav-cart-count">0</span>)</a>
+            <a href="javascript:void(0)" aria-label="Buscar" data-i18n="nav_search">SEARCH</a>
+            <a href="javascript:void(0)" id="open-cart" aria-label="Ver Carrito"><span data-i18n="nav_cart">CART</span> (<span id="nav-cart-count">0</span>)</a>
+            <div class="lang-switcher" role="group" aria-label="Language">
+                <button class="lang-btn active" data-lang="en" aria-label="English">EN</button>
+                <span class="lang-sep">|</span>
+                <button class="lang-btn" data-lang="pt" aria-label="Português">PT</button>
+            </div>
         </nav>
     </header>
 
@@ -44,9 +49,9 @@
             <button class="close-menu" id="close-menu" aria-label="Cerrar Menú">✕</button>
         </div>
         <div class="menu-tabs">
-            <button class="tab-btn active" data-tab="mujer">MUJER</button>
-            <button class="tab-btn" data-tab="hombre">HOMBRE</button>
-            <button class="tab-btn" data-tab="niños">NIÑOS</button>
+            <button class="tab-btn active" data-tab="mujer" data-i18n="tab_women">MUJER</button>
+            <button class="tab-btn" data-tab="hombre" data-i18n="tab_men">HOMBRE</button>
+            <button class="tab-btn" data-tab="niños" data-i18n="tab_kids_tab">NIÑOS</button>
             <div class="tab-indicator"></div>
         </div>
 
@@ -54,30 +59,30 @@
             <!-- TAB ADULTOS (MUJER / HOMBRE) -->
             <div id="tab-adultos" class="tab-pane active">
                 <ul class="main-categories">
-                    <li><a href="javascript:void(0)" class="filter-link" data-fighter="ALL">TODOS LOS PRODUCTOS</a></li>
+                    <li><a href="javascript:void(0)" class="filter-link" data-fighter="ALL" data-i18n="nav_all">TODOS LOS PRODUCTOS</a></li>
                 </ul>
 
                 <div class="menu-accordion">
-                    <button class="accordion-header">ROSTER MORTAL KOMBAT <span class="plus" aria-hidden="true">+</span></button>
+                    <button class="accordion-header"><span data-i18n="nav_mk_roster">ROSTER MORTAL KOMBAT</span> <span class="plus" aria-hidden="true">+</span></button>
                     <div class="accordion-body">
                         <ul class="fighter-list" id="mk-roster"></ul>
                     </div>
                 </div>
 
                 <div class="menu-accordion">
-                    <button class="accordion-header">ROSTER STREET FIGHTER <span class="plus" aria-hidden="true">+</span></button>
+                    <button class="accordion-header"><span data-i18n="nav_sf_roster">ROSTER STREET FIGHTER</span> <span class="plus" aria-hidden="true">+</span></button>
                     <div class="accordion-body">
                         <ul class="fighter-list" id="sf-roster"></ul>
                     </div>
                 </div>
 
                 <div class="menu-accordion">
-                    <button class="accordion-header">PRENDAS <span class="plus" aria-hidden="true">+</span></button>
+                    <button class="accordion-header"><span data-i18n="nav_garments">PRENDAS</span> <span class="plus" aria-hidden="true">+</span></button>
                     <div class="accordion-body">
                         <ul class="garment-list">
-                            <li><a href="#tshirts">CAMISETAS ELITE (240 GSM)</a></li>
-                            <li><a href="#sweatshirts">SUDADERAS (400 GSM)</a></li>
-                            <li><a href="#hoodies">SUDADERAS CON CAPUCHA</a></li>
+                            <li><a href="#tshirts" data-i18n="nav_tshirts">CAMISETAS ELITE (240 GSM)</a></li>
+                            <li><a href="#sweatshirts" data-i18n="nav_sweatshirts">SUDADERAS (400 GSM)</a></li>
+                            <li><a href="#hoodies" data-i18n="nav_hoodies">SUDADERAS CON CAPUCHA</a></li>
                         </ul>
                     </div>
                 </div>
@@ -86,24 +91,24 @@
             <!-- TAB NIÑOS -->
             <div id="tab-niños" class="tab-pane">
                 <ul class="main-categories">
-                    <li><a href="#kids">COLECCIÓN BABALITY</a></li>
+                    <li><a href="#kids" data-i18n="nav_kids">COLECCIÓN BABALITY</a></li>
                 </ul>
                 <div class="menu-accordion">
-                    <button class="accordion-header">ROSTER KIDS <span class="plus" aria-hidden="true">+</span></button>
+                    <button class="accordion-header"><span data-i18n="nav_kids_roster">ROSTER KIDS</span> <span class="plus" aria-hidden="true">+</span></button>
                     <div class="accordion-body">
                         <ul class="garment-list">
-                            <li><a href="#kids">KIDS T-SHIRTS</a></li>
-                            <li><a href="#kids">ACCESORIOS BABALITY</a></li>
+                            <li><a href="#kids" data-i18n="nav_kids_tshirts">KIDS T-SHIRTS</a></li>
+                            <li><a href="#kids" data-i18n="nav_kids_access">ACCESORIOS BABALITY</a></li>
                         </ul>
                     </div>
                 </div>
-                <p class="tab-info">Prendas diseñadas específicamente para el confort y estilo de los más pequeños.</p>
+                <p class="tab-info" data-i18n="nav_kids_info">Prendas diseñadas específicamente para el confort y estilo de los más pequeños.</p>
             </div>
 
             <div class="about-section" style="margin-top: 2rem;">
-                <div class="section-title">AYUDA</div>
-                <p>ENVÍOS Y DEVOLUCIONES<br>GUÍA DE TALLAS</p>
-                <p style="margin-top: 1rem;">CONTACTO<br><a href="mailto:info@alazanstore.shop" class="contact-email">info@alazanstore.shop</a></p>
+                <div class="section-title" data-i18n="nav_help">AYUDA</div>
+                <p><span data-i18n="nav_shipping">ENVÍOS Y DEVOLUCIONES</span><br><span data-i18n="nav_size_guide">GUÍA DE TALLAS</span></p>
+                <p style="margin-top: 1rem;"><span data-i18n="nav_contact">CONTACTO</span><br><a href="mailto:info@alazanstore.shop" class="contact-email">info@alazanstore.shop</a></p>
             </div>
         </div>
     </div>
@@ -111,7 +116,7 @@
     <!-- CART OFF-CANVAS -->
     <div id="cart-menu" class="cart-offcanvas" role="dialog" aria-modal="true" aria-label="Carrito de Compras">
         <div class="cart-header">
-            <h3>TU CESTA (<span id="cart-count">0</span>)</h3>
+            <h3><span data-i18n="cart_title">TU CESTA</span> (<span id="cart-count">0</span>)</h3>
             <button class="close-cart" id="close-cart" aria-label="Cerrar Carrito">✕</button>
         </div>
         <div class="cart-items" id="cart-items">
@@ -119,10 +124,10 @@
         </div>
         <div class="cart-footer">
             <div class="cart-total">
-                <span>TOTAL</span>
+                <span data-i18n="cart_total">TOTAL</span>
                 <span id="cart-total-price">0 ARS</span>
             </div>
-            <button id="checkout-btn" class="checkout-btn" disabled>PROCEDER AL PAGO</button>
+            <button id="checkout-btn" class="checkout-btn" disabled data-i18n="btn_checkout">PROCEDER AL PAGO</button>
         </div>
     </div>
 
@@ -131,20 +136,20 @@
         <!-- HERO SECTION -->
         <section class="hero-section" aria-labelledby="hero-title">
             <div class="hero-content">
-                <div class="hero-eyebrow" style="color: #000; font-weight: 700;">VISTE LO QUE JUEGAS</div>
+                <div class="hero-eyebrow" style="color: #000; font-weight: 700;" data-i18n="hero_eyebrow">VISTE LO QUE JUEGAS</div>
                 <h1 id="hero-title" class="hero-headline">
                     <span class="hero-line" style="font-size: clamp(4rem, 12vw, 10rem); line-height: 0.8;">ELITE</span>
                     <span class="hero-line hero-line--outline" style="font-size: clamp(4rem, 12vw, 10rem); line-height: 0.8;">COLLECTION</span>
                 </h1>
                 <div class="hero-sub" style="margin-top: 3.5rem;">HIGH GRAMMAGE PREMIUM COTTON<br>ARTISAN PRINTED IN ARGENTINA</div>
-                <a href="#tshirts" class="hero-cta">EXPLORAR CATÁLOGO</a>
+                <a href="#tshirts" class="hero-cta" data-i18n="hero_cta">EXPLORAR CATÁLOGO</a>
             </div>
         </section>
 
         <!-- T-SHIRT COLLECTION -->
         <section class="collection" id="tshirts" aria-labelledby="tshirts-title">
             <div class="section-header">
-                <h3 id="tshirts-title">T-SHIRTS</h3>
+                <h3 id="tshirts-title" data-i18n="sec_tshirts">T-SHIRTS</h3>
             </div>
             <div class="products-grid" id="product-grid"></div>
         </section>
@@ -152,7 +157,7 @@
         <!-- SWEATSHIRT COLLECTION -->
         <section class="collection" id="sweatshirts" aria-labelledby="sweatshirts-title">
             <div class="section-header">
-                <h3 id="sweatshirts-title">ELITE CREWNECK SERIES · SWEATSHIRTS</h3>
+                <h3 id="sweatshirts-title" data-i18n="sec_sweatshirts">ELITE CREWNECK SERIES · SWEATSHIRTS</h3>
             </div>
             <div class="products-grid" id="sweatshirt-grid"></div>
         </section>
@@ -160,7 +165,7 @@
         <!-- HOODIE COLLECTION -->
         <section class="collection" id="hoodies" aria-labelledby="hoodies-title">
             <div class="section-header">
-                <h3 id="hoodies-title">PREMIUM HOODIE SERIES · HOODIES</h3>
+                <h3 id="hoodies-title" data-i18n="sec_hoodies">PREMIUM HOODIE SERIES · HOODIES</h3>
             </div>
             <div class="products-grid" id="hoodie-grid"></div>
         </section>
@@ -168,7 +173,7 @@
         <!-- KIDS COLLECTION -->
         <section class="collection" id="kids" aria-labelledby="kids-title">
             <div class="section-header">
-                <h3 id="kids-title">KIDS BABALITY SERIES · T-SHIRTS</h3>
+                <h3 id="kids-title" data-i18n="sec_kids">KIDS BABALITY SERIES · T-SHIRTS</h3>
             </div>
             <div class="products-grid" id="kids-grid"></div>
         </section>
@@ -178,50 +183,58 @@
     <div id="checkout-modal" class="checkout-modal" role="dialog" aria-modal="true" aria-label="Checkout">
         <div class="checkout-container">
             <div class="checkout-header">
-                <h2>CHECKOUT SEGURO</h2>
+                <h2 data-i18n="checkout_title">CHECKOUT SEGURO</h2>
                 <button class="close-checkout" id="close-checkout" aria-label="Cerrar Checkout">✕</button>
             </div>
             <div class="checkout-body">
                 <div id="checkout-form">
                     <div class="payment-methods">
-                        <button class="payment-method active" data-method="stripe">STRIPE</button>
-                        <button class="payment-method" data-method="paypal">PAYPAL</button>
-                        <button class="payment-method" data-method="revolut">REVOLUT</button>
+                        <button class="payment-method active" data-provider="stripe" data-method="stripe">STRIPE</button>
+                        <button class="payment-method" data-provider="mercadopago" data-method="mercadopago">MERCADO PAGO</button>
                     </div>
                     <div class="form-group">
-                        <label for="full-name">NOMBRE COMPLETO</label>
-                        <input type="text" id="full-name" placeholder="Abel Rodes">
+                        <label for="checkout-name" data-i18n="label_name">NOMBRE COMPLETO</label>
+                        <input type="text" id="checkout-name" placeholder="Abel Rodes" required>
                     </div>
                     <div class="form-group">
-                        <label for="address">DIRECCIÓN DE ENVÍO</label>
-                        <input type="text" id="address" placeholder="Calle Corrientes 1234, CABA">
+                        <label for="checkout-email" data-i18n="label_email">EMAIL</label>
+                        <input type="email" id="checkout-email" placeholder="abel@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="checkout-address" data-i18n="label_address">DIRECCIÓN DE ENVÍO</label>
+                        <input type="text" id="checkout-address" placeholder="Calle Corrientes 1234, CABA" required>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="city">CIUDAD</label>
-                            <input type="text" id="city" placeholder="Buenos Aires">
+                            <label for="checkout-city" data-i18n="label_city">CIUDAD</label>
+                            <input type="text" id="checkout-city" placeholder="Buenos Aires" required>
                         </div>
                         <div class="form-group small">
-                            <label for="zip">CP</label>
-                            <input type="text" id="zip" placeholder="1425">
+                            <label for="checkout-zip" data-i18n="label_zip">CP</label>
+                            <input type="text" id="checkout-zip" placeholder="1425" required>
                         </div>
                     </div>
-                    <div class="secure-badge">
-                        🔒 PAGO ENCRIPTADO SSL · TOTAL A PAGAR: <span id="pay-amount">0 ARS</span>
+                    <!-- CPF field: shown dynamically only for BR customers -->
+                    <div class="form-group" id="cpf-field" style="display:none">
+                        <label for="checkout-cpf" data-i18n="label_cpf">CPF (obrigatório para Brasil)</label>
+                        <input type="text" id="checkout-cpf" placeholder="000.000.000-00" maxlength="14">
                     </div>
-                    <button id="final-pay-btn" class="pay-btn">CONFIRMAR Y PAGAR</button>
+                    <div class="secure-badge">
+                        <span data-i18n="ssl_badge">🔒 PAGO ENCRIPTADO SSL · TOTAL:</span> <span id="pay-amount">0</span>
+                    </div>
+                    <button id="final-pay-btn" class="pay-btn" data-i18n="btn_pay">CONFIRMAR Y PAGAR</button>
                 </div>
 
                 <div id="payment-processing" class="hidden">
                     <div class="spinner"></div>
-                    <p>PROCESANDO PAGO...</p>
+                    <p data-i18n="processing">PROCESANDO PAGO...</p>
                 </div>
 
                 <div id="payment-success" class="hidden">
                     <div class="success-icon">✓</div>
-                    <h3>¡GRACIAS POR TU COMPRA!</h3>
-                    <p>Hemos enviado un email con los detalles de tu pedido.</p>
-                    <button id="continue-shopping" class="continue-btn">VOLVER A LA TIENDA</button>
+                    <h3 data-i18n="success_title">¡GRACIAS POR TU COMPRA!</h3>
+                    <p data-i18n="success_body">Hemos enviado un email con los detalles de tu pedido.</p>
+                    <button id="continue-shopping" class="continue-btn" data-i18n="btn_continue">VOLVER A LA TIENDA</button>
                 </div>
             </div>
         </div>
@@ -233,7 +246,7 @@
             <div class="ref-footer-top">
                 <div class="ref-footer-brand">
                     <h4 class="ref-footer-logo">ALAZAN</h4>
-                    <p class="ref-footer-tagline">PREMIUM GAMING APPAREL. HIGH-END STREETWEAR DESIGNED FOR THE ELITE.</p>
+                    <p class="ref-footer-tagline" data-i18n="footer_tagline">PREMIUM GAMING APPAREL. HIGH-END STREETWEAR DESIGNED FOR THE ELITE.</p>
                 </div>
                 <div class="ref-footer-socials">
                     <a href="https://www.instagram.com/alazan12581?igsh=MTVibW5oOTVtbzU2aw==" target="_blank" aria-label="Instagram"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
@@ -251,7 +264,7 @@
 
             <div class="ref-footer-middle">
                 <div class="ref-footer-col">
-                    <h5 class="ref-footer-title">COMPRA</h5>
+                    <h5 class="ref-footer-title" data-i18n="footer_buy">COMPRA</h5>
                     <ul class="ref-footer-list">
                         <li><a href="#tshirts">CAMISETAS ELITE</a></li>
                         <li><a href="#sweatshirts">SUDADERAS</a></li>
@@ -260,7 +273,7 @@
                     </ul>
                 </div>
                 <div class="ref-footer-col">
-                    <h5 class="ref-footer-title">SOPORTE</h5>
+                    <h5 class="ref-footer-title" data-i18n="footer_support">SOPORTE</h5>
                     <ul class="ref-footer-list">
                         <li><a href="mailto:info@alazanstore.shop">CONTACTO</a></li>
                         <li><a href="javascript:void(0)" class="scroll-link" data-target="#tshirts">ENVÍOS</a></li>
@@ -269,11 +282,11 @@
                     </ul>
                 </div>
                 <div class="ref-footer-col">
-                    <h5 class="ref-footer-title">LEGAL</h5>
+                    <h5 class="ref-footer-title" data-i18n="footer_legal">LEGAL</h5>
                     <ul class="ref-footer-list">
-                        <li><a href="javascript:void(0)" id="terms-link">TÉRMINOS DE SERVICIO</a></li>
-                        <li><a href="javascript:void(0)" id="privacy-link">POLÍTICA DE PRIVACIDAD</a></li>
-                        <li><a href="javascript:void(0)" id="legal-notice-link">AVISO LEGAL</a></li>
+                        <li><a href="javascript:void(0)" id="terms-link" data-i18n="footer_terms">TÉRMINOS DE SERVICIO</a></li>
+                        <li><a href="javascript:void(0)" id="privacy-link" data-i18n="footer_privacy">POLÍTICA DE PRIVACIDAD</a></li>
+                        <li><a href="javascript:void(0)" id="legal-notice-link" data-i18n="footer_legal_notice">AVISO LEGAL</a></li>
                     </ul>
                 </div>
             </div>

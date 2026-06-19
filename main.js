@@ -108,40 +108,256 @@ const products = [
 ];
 
 
-// --- LOGISTICS API ENVELOPE (BRIDGE) ---
-/**
- * This service handles communication with external logistics providers.
- * Integration points: Shipping calculation, shipment creation, and tracking.
- */
-const LogisticsService = {
-    apiEndpoint: 'https://api.logistics-provider.com/v1', // Placeholder
-    apiKey: null, // Should be set via environment or secure config
+// ── I18N — EN / PT-BR ────────────────────────────────────────
+const TRANSLATIONS = {
+  en: {
+    // Nav
+    nav_search:          'SEARCH',
+    nav_cart:            'CART',
+    nav_all:             'ALL PRODUCTS',
+    nav_mk_roster:       'MORTAL KOMBAT ROSTER',
+    nav_sf_roster:       'STREET FIGHTER ROSTER',
+    nav_garments:        'GARMENTS',
+    nav_tshirts:         'ELITE T-SHIRTS (240 GSM)',
+    nav_sweatshirts:     'SWEATSHIRTS (400 GSM)',
+    nav_hoodies:         'HOODED SWEATSHIRTS',
+    nav_kids:            'BABALITY COLLECTION',
+    nav_kids_roster:     'KIDS ROSTER',
+    nav_kids_tshirts:    'KIDS T-SHIRTS',
+    nav_kids_access:     'BABALITY ACCESSORIES',
+    nav_kids_info:       'Garments designed for comfort and style for the little ones.',
+    nav_help:            'HELP',
+    nav_shipping:        'SHIPPING & RETURNS',
+    nav_size_guide:      'SIZE GUIDE',
+    nav_contact:         'CONTACT',
+    // Hero
+    hero_eyebrow:        'WEAR WHAT YOU PLAY',
+    hero_sub:            'HIGH GRAMMAGE PREMIUM COTTON\nARTISAN PRINTED',
+    hero_cta:            'EXPLORE CATALOG',
+    // Section titles
+    sec_tshirts:         'T-SHIRTS',
+    sec_sweatshirts:     'ELITE CREWNECK SERIES · SWEATSHIRTS',
+    sec_hoodies:         'PREMIUM HOODIE SERIES · HOODIES',
+    sec_kids:            'KIDS BABALITY SERIES · T-SHIRTS',
+    // Product card
+    tag_tshirt:          'LIMITED ELITE SERIES · 240 GSM',
+    tag_kids:            'KIDS BABALITY SERIES · 100% COTTON',
+    tag_heavy:           'PREMIUM HEAVYWEIGHT · 400 GSM',
+    color_black:         'Black',
+    color_white:         'White',
+    color_gray:          'Gray',
+    btn_add:             'ADD TO CART',
+    btn_added:           '✓ ADDED',
+    // Cart
+    cart_title:          'YOUR CART',
+    cart_empty:          'Your cart is empty',
+    cart_total:          'TOTAL',
+    btn_checkout:        'PROCEED TO CHECKOUT',
+    btn_remove:          'Remove',
+    // Checkout modal
+    checkout_title:      'SECURE CHECKOUT',
+    label_name:          'FULL NAME',
+    label_email:         'EMAIL',
+    label_address:       'SHIPPING ADDRESS',
+    label_city:          'CITY',
+    label_zip:           'ZIP CODE',
+    label_cpf:           'CPF (required for Brazil)',
+    ssl_badge:           '🔒 SSL ENCRYPTED PAYMENT · TOTAL:',
+    btn_pay:             'CONFIRM & PAY',
+    processing:          'PROCESSING PAYMENT...',
+    success_title:       'THANK YOU FOR YOUR ORDER!',
+    success_body:        'We have sent an email with your order details.',
+    btn_continue:        'BACK TO STORE',
+    err_required:        'Please fill in all required fields.',
+    err_cpf:             'Invalid CPF. Required format: XXX.XXX.XXX-XX',
+    err_payment:         'Payment error:',
+    // Footer
+    footer_buy:          'SHOP',
+    footer_support:      'SUPPORT',
+    footer_legal:        'LEGAL',
+    footer_shipping_f:   'SHIPPING & RETURNS',
+    footer_size_guide:   'SIZE GUIDE',
+    footer_returns:      'RETURNS',
+    footer_terms:        'TERMS OF SERVICE',
+    footer_privacy:      'PRIVACY POLICY',
+    footer_legal_notice: 'LEGAL NOTICE',
+    footer_tagline:      'PREMIUM GAMING APPAREL. HIGH-END STREETWEAR DESIGNED FOR THE ELITE.',
+    // Menu tabs
+    tab_women:           'WOMEN',
+    tab_men:             'MEN',
+    tab_kids_tab:        'KIDS',
+  },
+  pt: {
+    nav_search:          'BUSCAR',
+    nav_cart:            'CARRINHO',
+    nav_all:             'TODOS OS PRODUTOS',
+    nav_mk_roster:       'ELENCO MORTAL KOMBAT',
+    nav_sf_roster:       'ELENCO STREET FIGHTER',
+    nav_garments:        'PEÇAS',
+    nav_tshirts:         'CAMISETAS ELITE (240 GSM)',
+    nav_sweatshirts:     'MOLETONS (400 GSM)',
+    nav_hoodies:         'MOLETONS COM CAPUZ',
+    nav_kids:            'COLEÇÃO BABALITY',
+    nav_kids_roster:     'ELENCO INFANTIL',
+    nav_kids_tshirts:    'CAMISETAS INFANTIS',
+    nav_kids_access:     'ACESSÓRIOS BABALITY',
+    nav_kids_info:       'Peças criadas para o conforto e estilo dos pequenos.',
+    nav_help:            'AJUDA',
+    nav_shipping:        'ENVIOS E DEVOLUÇÕES',
+    nav_size_guide:      'GUIA DE MEDIDAS',
+    nav_contact:         'CONTATO',
+    hero_eyebrow:        'VISTA O QUE VOCÊ JOGA',
+    hero_sub:            'ALGODÃO PREMIUM DE ALTO GRAMATURA\nIMPRESSO ARTESANALMENTE',
+    hero_cta:            'EXPLORAR CATÁLOGO',
+    sec_tshirts:         'CAMISETAS',
+    sec_sweatshirts:     'SÉRIE ELITE CREWNECK · MOLETONS',
+    sec_hoodies:         'SÉRIE PREMIUM · MOLETONS COM CAPUZ',
+    sec_kids:            'SÉRIE BABALITY INFANTIL · CAMISETAS',
+    tag_tshirt:          'SÉRIE ELITE LIMITADA · 240 GSM',
+    tag_kids:            'SÉRIE BABALITY KIDS · 100% ALGODÃO',
+    tag_heavy:           'PESO PREMIUM · 400 GSM',
+    color_black:         'Preto',
+    color_white:         'Branco',
+    color_gray:          'Cinza',
+    btn_add:             'ADICIONAR AO CARRINHO',
+    btn_added:           '✓ ADICIONADO',
+    cart_title:          'SEU CARRINHO',
+    cart_empty:          'Seu carrinho está vazio',
+    cart_total:          'TOTAL',
+    btn_checkout:        'FINALIZAR COMPRA',
+    btn_remove:          'Remover',
+    checkout_title:      'CHECKOUT SEGURO',
+    label_name:          'NOME COMPLETO',
+    label_email:         'E-MAIL',
+    label_address:       'ENDEREÇO DE ENTREGA',
+    label_city:          'CIDADE',
+    label_zip:           'CEP',
+    label_cpf:           'CPF (obrigatório para o Brasil)',
+    ssl_badge:           '🔒 PAGAMENTO CRIPTOGRAFADO SSL · TOTAL:',
+    btn_pay:             'CONFIRMAR E PAGAR',
+    processing:          'PROCESSANDO PAGAMENTO...',
+    success_title:       'OBRIGADO PELA SUA COMPRA!',
+    success_body:        'Enviamos um e-mail com os detalhes do seu pedido.',
+    btn_continue:        'VOLTAR À LOJA',
+    err_required:        'Por favor, preencha todos os campos obrigatórios.',
+    err_cpf:             'CPF inválido. Formato exigido: XXX.XXX.XXX-XX',
+    err_payment:         'Erro no pagamento:',
+    footer_buy:          'COMPRAR',
+    footer_support:      'SUPORTE',
+    footer_legal:        'JURÍDICO',
+    footer_shipping_f:   'ENVIOS E DEVOLUÇÕES',
+    footer_size_guide:   'GUIA DE MEDIDAS',
+    footer_returns:      'DEVOLUÇÕES',
+    footer_terms:        'TERMOS DE SERVIÇO',
+    footer_privacy:      'POLÍTICA DE PRIVACIDADE',
+    footer_legal_notice: 'AVISO LEGAL',
+    footer_tagline:      'MODA GAMER PREMIUM. STREETWEAR DE ALTO NÍVEL CRIADO PARA A ELITE.',
+    tab_women:           'MULHER',
+    tab_men:             'HOMEM',
+    tab_kids_tab:        'KIDS',
+  }
+};
 
-    async calculateShipping(zipCode, weight) {
-        console.log(`Logistics: Calculating shipping for ZIP ${zipCode}...`);
-        // Mock API call
-        return new Promise(resolve => {
-            setTimeout(() => {
-                const basePrice = 5000; // Mock ARS
-                resolve({ success: true, price: basePrice, currency: 'ARS', estDelivery: '3-5 business days' });
-            }, 800);
+// Auto-detect language from browser (defaults to EN)
+let currentLang = (() => {
+  const saved = localStorage.getItem('alazan_lang');
+  if (saved && TRANSLATIONS[saved]) return saved;
+  const browser = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
+  return browser.startsWith('pt') ? 'pt' : 'en';
+})();
+
+function t(key) {
+  return (TRANSLATIONS[currentLang] || TRANSLATIONS.en)[key] || TRANSLATIONS.en[key] || key;
+}
+
+function applyTranslations() {
+  // Update all elements with data-i18n attribute
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (el.tagName === 'INPUT' && el.placeholder) {
+      el.placeholder = t(key);
+    } else {
+      el.textContent = t(key);
+    }
+  });
+  // Update lang switcher active state
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.getAttribute('data-lang') === currentLang);
+  });
+  // Update html lang attr
+  document.documentElement.lang = currentLang === 'pt' ? 'pt-BR' : 'en';
+  // Re-render product grids (they use t() inline)
+  if (typeof renderProducts === 'function') renderProducts();
+  // Update cart UI strings
+  if (typeof updateCartUI === 'function') updateCartUI();
+}
+
+function setLang(lang) {
+  if (!TRANSLATIONS[lang]) return;
+  currentLang = lang;
+  localStorage.setItem('alazan_lang', lang);
+  applyTranslations();
+}
+
+// ── ALAZAN STORE API CLIENT ───────────────────────────────────
+const AlazanAPI = {
+    BASE: window.ALAZAN_API_URL || 'http://localhost:3001/api',
+
+    async _post(path, body) {
+        const res = await fetch(`${this.BASE}${path}`, {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body:    JSON.stringify(body)
         });
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({ error: res.statusText }));
+            throw new Error(err.error || `API error ${res.status}`);
+        }
+        return res.json();
     },
 
-    async createShipment(orderData) {
-        console.log('Logistics: Creating shipment for order...', orderData);
-        // Mock API call
-        return new Promise(resolve => {
-            setTimeout(() => {
-                resolve({ success: true, trackingNumber: `ALZ-${Math.random().toString(36).toUpperCase().substr(2, 9)}`, status: 'PENDING' });
-            }, 1500);
-        });
+    async _get(path) {
+        const res = await fetch(`${this.BASE}${path}`);
+        if (!res.ok) throw new Error(`API error ${res.status}`);
+        return res.json();
     },
 
-    async trackOrder(trackingNumber) {
-        console.log(`Logistics: Tracking order ${trackingNumber}...`);
-        // Mock API call
-        return { status: 'IN_TRANSIT', location: 'Buenos Aires Distribution Center' };
+    // Detect country from browser locale (fallback: AR)
+    detectCountry() {
+        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+        if (tz.includes('Buenos_Aires') || tz.includes('Cordoba')) return 'AR';
+        if (tz.includes('Sao_Paulo') || tz.includes('Brasilia'))   return 'BR';
+        if (tz.includes('Mexico'))                                   return 'MX';
+        if (tz.includes('Toronto') || tz.includes('Vancouver'))     return 'CA';
+        if (tz.includes('America/') && !tz.includes('Mexico') &&
+            !tz.includes('Argentina') && !tz.includes('Sao_Paulo')) return 'US';
+        return 'AR'; // Default to Argentina
+    },
+
+    // Get available payment providers for detected country
+    async getPaymentConfig() {
+        const country = this.detectCountry();
+        return this._get(`/checkout/config?country=${country}`);
+    },
+
+    // Get shipping rates (Printful)
+    async getShippingRates({ items, recipient }) {
+        return this._post('/checkout/shipping', { items, recipient });
+    },
+
+    // Initiate Stripe Checkout Session (redirect)
+    async checkoutStripe({ items, customer }) {
+        return this._post('/checkout/stripe', { items, customer });
+    },
+
+    // Initiate MercadoPago Preference (redirect)
+    async checkoutMercadoPago({ items, customer, countryCode }) {
+        return this._post('/checkout/mercadopago', { items, customer, countryCode });
+    },
+
+    // Get order status by ref
+    async getOrder(ref) {
+        return this._get(`/orders/${ref}`);
     }
 };
 
@@ -153,6 +369,9 @@ const LogisticsService = {
     let cart = [];
 
     // Initialization
+    // Make renderProducts globally accessible for i18n re-render
+    function renderProducts() { initProducts(); }
+
     document.addEventListener('DOMContentLoaded', () => {
         try {
             initProducts();
@@ -160,11 +379,21 @@ const LogisticsService = {
             initCart();
             initCursor();
             initLegalModal();
-            console.log('Alazan Store: Core initialized and reinforced.');
+            initLangSwitcher();
+            applyTranslations();
+            console.log('Alazan Store: Core initialized.');
         } catch (error) {
             console.error('Alazan Store: Initialization failed:', error);
         }
     });
+
+    function initLangSwitcher() {
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                setLang(btn.getAttribute('data-lang'));
+            });
+        });
+    }
 
     // --- FUNCTIONS ---
 
@@ -334,17 +563,20 @@ const LogisticsService = {
                 graphicMargin = '-5%';
             }
 
+            const typeTag = p.type === 'tshirt' ? t('tag_tshirt') : p.type === 'kids' ? t('tag_kids') : t('tag_heavy');
+            const locale  = currentLang === 'pt' ? 'pt-BR' : 'en-US';
+
             card.innerHTML = `
                 <div class="zalando-gallery">
                     <div class="main-image">
                         <div class="t-shirt-composite">
-                            <img src="${p.baseImg}" class="fabric-texture" alt="Texture">
-                            <img src="${p.img}" class="shirt-graphic" style="transform: translate(-50%, -50%) ${graphicScale}; margin-top: ${graphicMargin};" alt="${p.name}">
+                            <img src="${p.baseImg}" class="fabric-texture" alt="Texture" loading="lazy">
+                            <img src="${p.img}" class="shirt-graphic" style="transform: translate(-50%, -50%) ${graphicScale}; margin-top: ${graphicMargin};" alt="${p.name}" loading="lazy">
                         </div>
                     </div>
                     <div class="thumbnails">
                         <div class="thumb-item active" data-view="front">
-                            <img src="${p.baseImg}" style="opacity: 0.5;" alt="Front">
+                            <img src="${p.baseImg}" style="opacity: 0.5;" alt="Front" loading="lazy">
                         </div>
                         <div class="thumb-item" data-view="details">
                             <div class="thumb-color-sync"></div>
@@ -355,16 +587,16 @@ const LogisticsService = {
                     <div class="product-meta">
                         <div class="product-info">
                             <h4>${p.name}</h4>
-                            <p>${p.type === 'tshirt' ? 'LIMITED ELITE SERIES · 240 GSM' : (p.type === 'kids' ? 'KIDS BABALITY SERIES · 100% COTTON' : 'PREMIUM HEAVYWEIGHT · 400 GSM')}</p>
+                            <p>${typeTag}</p>
                         </div>
-                        <div class="product-price">${p.price.toLocaleString('es-AR')} ARS</div>
+                        <div class="product-price">${p.price.toLocaleString(locale)} ARS</div>
                     </div>
                     <div class="color-picker">
-                        <div class="swatch active" style="background: #000;" data-color="#000000" title="Negro"></div>
-                        <div class="swatch" style="background: #ffffff;" data-color="#ffffff" title="Blanco"></div>
-                        <div class="swatch" style="background: #f0f0f0;" data-color="#f0f0f0" title="Gris"></div>
+                        <div class="swatch active" style="background: #000;" data-color="#000000" title="${t('color_black')}"></div>
+                        <div class="swatch" style="background: #ffffff;" data-color="#ffffff" title="${t('color_white')}"></div>
+                        <div class="swatch" style="background: #f0f0f0;" data-color="#f0f0f0" title="${t('color_gray')}"></div>
                     </div>
-                    <button class="add-to-cart-btn">AÑADIR A LA CESTA</button>
+                    <button class="add-to-cart-btn">${t('btn_add')}</button>
                 </div>
             `;
             
@@ -560,8 +792,8 @@ const LogisticsService = {
             img: product.img 
         });
         
-        buttonElement.textContent = '✓ AÑADIDO';
-        setTimeout(() => buttonElement.textContent = 'AÑADIR A LA CESTA', 1500);
+        buttonElement.textContent = t('btn_added');
+        setTimeout(() => { buttonElement.textContent = t('btn_add'); }, 1500);
         
         updateCartUI();
         document.getElementById('cart-menu')?.classList.add('open');
@@ -580,32 +812,34 @@ const LogisticsService = {
         
         if (!cartItemsContainer) return;
 
+        const locale = currentLang === 'pt' ? 'pt-BR' : 'en-US';
+
         if (cart.length === 0) {
-            cartItemsContainer.innerHTML = '<p class="empty-cart-msg">Tu cesta está vacía</p>';
+            cartItemsContainer.innerHTML = `<p class="empty-cart-msg">${t('cart_empty')}</p>`;
             if (cartTotalPrice) cartTotalPrice.textContent = '0 ARS';
             if (checkoutBtn) checkoutBtn.disabled = true;
             return;
         }
-        
+
         let html = '';
         let total = 0;
         cart.forEach((item, index) => {
             total += item.price;
             html += `
                 <div class="cart-item">
-                    <img src="${item.img}" class="cart-item-img" alt="${item.title}">
+                    <img src="${item.img}" class="cart-item-img" alt="${item.title}" loading="lazy">
                     <div class="cart-item-details">
                         <div>
                             <div class="cart-item-title">${item.title}</div>
                             <div class="cart-item-color">${item.color}</div>
-                            <div class="cart-item-price">${item.price.toLocaleString('es-AR')} ARS</div>
+                            <div class="cart-item-price">${item.price.toLocaleString(locale)} ARS</div>
                         </div>
-                        <div class="remove-item" data-index="${index}">ELIMINAR</div>
+                        <div class="remove-item" data-index="${index}">${t('btn_remove')}</div>
                     </div>
                 </div>
             `;
         });
-        
+
         cartItemsContainer.innerHTML = html;
         
         // Bind remove buttons
@@ -617,8 +851,8 @@ const LogisticsService = {
             });
         });
 
-        if (cartTotalPrice) cartTotalPrice.textContent = total.toLocaleString('es-AR') + ' ARS';
-        if (payAmount) payAmount.textContent = total.toLocaleString('es-AR') + ' ARS';
+        if (cartTotalPrice) cartTotalPrice.textContent = total.toLocaleString(locale) + ' ARS';
+        if (payAmount) payAmount.textContent = total.toLocaleString(locale) + ' ARS';
         if (checkoutBtn) checkoutBtn.disabled = false;
     }
 
@@ -643,21 +877,23 @@ const LogisticsService = {
     }
 
     function initCart() {
-        const cartMenu = document.getElementById('cart-menu');
-        const openCartBtn = document.getElementById('open-cart');
-        const closeCartBtn = document.getElementById('close-cart');
-        const checkoutBtn = document.getElementById('checkout-btn');
-        const checkoutModal = document.getElementById('checkout-modal');
+        const cartMenu        = document.getElementById('cart-menu');
+        const openCartBtn     = document.getElementById('open-cart');
+        const closeCartBtn    = document.getElementById('close-cart');
+        const checkoutBtn     = document.getElementById('checkout-btn');
+        const checkoutModal   = document.getElementById('checkout-modal');
         const closeCheckoutBtn = document.getElementById('close-checkout');
-        
-        if(openCartBtn) openCartBtn.addEventListener('click', (e) => { e.preventDefault(); cartMenu?.classList.add('open'); });
-        if(closeCartBtn) closeCartBtn.addEventListener('click', () => cartMenu?.classList.remove('open'));
-        if(checkoutBtn) checkoutBtn.addEventListener('click', () => { 
-            cartMenu?.classList.remove('open'); 
-            checkoutModal?.classList.add('open'); 
-        });
-        if(closeCheckoutBtn) closeCheckoutBtn.addEventListener('click', () => checkoutModal?.classList.remove('open'));
 
+        if (openCartBtn)      openCartBtn.addEventListener('click', (e) => { e.preventDefault(); cartMenu?.classList.add('open'); });
+        if (closeCartBtn)     closeCartBtn.addEventListener('click', () => cartMenu?.classList.remove('open'));
+        if (checkoutBtn)      checkoutBtn.addEventListener('click', () => {
+            cartMenu?.classList.remove('open');
+            checkoutModal?.classList.add('open');
+            loadPaymentProviders();
+        });
+        if (closeCheckoutBtn) closeCheckoutBtn.addEventListener('click', () => checkoutModal?.classList.remove('open'));
+
+        // Payment method tab selection
         const paymentMethods = document.querySelectorAll('.payment-method');
         paymentMethods.forEach(pm => {
             pm.addEventListener('click', () => {
@@ -666,32 +902,146 @@ const LogisticsService = {
             });
         });
 
+        // ── Load available providers for user's country ─────────
+        async function loadPaymentProviders() {
+            try {
+                const config  = await AlazanAPI.getPaymentConfig();
+                const country = config.country;
+
+                // Show/hide Stripe button
+                const stripeBtn = document.querySelector('.payment-method[data-provider="stripe"]');
+                if (stripeBtn) stripeBtn.style.display = config.providers.stripe?.available ? '' : 'none';
+
+                // Show/hide MercadoPago button
+                const mpBtn = document.querySelector('.payment-method[data-provider="mercadopago"]');
+                if (mpBtn) mpBtn.style.display = config.providers.mercadopago?.available ? '' : 'none';
+
+                // Store country on modal for use at payment time
+                checkoutModal?.setAttribute('data-country', country);
+
+                // CPF field: mandatory for Brazil (Correios label requirement)
+                const cpfField = document.getElementById('cpf-field');
+                if (cpfField) cpfField.style.display = country === 'BR' ? '' : 'none';
+
+                // Country-aware placeholders
+                const addrField = document.getElementById('checkout-address');
+                const cityField = document.getElementById('checkout-city');
+                const zipField  = document.getElementById('checkout-zip');
+                const PH = {
+                    AR: { addr: 'Av. Corrientes 1234, CABA',       city: 'Buenos Aires',      zip: '1425'      },
+                    BR: { addr: 'Rua das Flores 123, Centro',       city: 'São Paulo',         zip: '01310-100' },
+                    MX: { addr: 'Av. Insurgentes 500, Roma Norte',  city: 'Ciudad de México',  zip: '06600'     },
+                    US: { addr: '123 Main St, Apt 4B',              city: 'New York',          zip: '10001'     },
+                    CA: { addr: '123 Queen St W',                   city: 'Toronto',           zip: 'M5H 2M9'  }
+                };
+                const ph = PH[country] || PH['US'];
+                if (addrField) addrField.placeholder = ph.addr;
+                if (cityField) cityField.placeholder  = ph.city;
+                if (zipField)  zipField.placeholder   = ph.zip;
+
+                // Auto-select first available provider
+                const firstVisible = document.querySelector('.payment-method:not([style*="none"])');
+                if (firstVisible) {
+                    paymentMethods.forEach(m => m.classList.remove('active'));
+                    firstVisible.classList.add('active');
+                }
+            } catch (err) {
+                console.warn('[Alazan] Could not load payment config:', err.message);
+            }
+        }
+
+        // ── Confirm & Pay ───────────────────────────────────────
         const finalPayBtn = document.getElementById('final-pay-btn');
-        if(finalPayBtn) {
+        if (finalPayBtn) {
             finalPayBtn.addEventListener('click', async () => {
+                const nameField    = document.getElementById('checkout-name');
+                const emailField   = document.getElementById('checkout-email');
+                const addressField = document.getElementById('checkout-address');
+                const cityField    = document.getElementById('checkout-city');
+                const zipField     = document.getElementById('checkout-zip');
+
+                // Basic validation
+                const countryCode = checkoutModal?.getAttribute('data-country') || AlazanAPI.detectCountry();
+                const cpfField   = document.getElementById('checkout-cpf');
+                const cpfValue   = cpfField?.value.trim() || '';
+
+                if (!nameField?.value || !emailField?.value || !addressField?.value || !cityField?.value || !zipField?.value) {
+                    alert(t('err_required'));
+                    return;
+                }
+
+                // CPF mandatory for Brazil
+                if (countryCode === 'BR') {
+                    const cpfRegex = /^\d{3}\.\d{3}\.\d{3}-\d{2}$/;
+                    if (!cpfRegex.test(cpfValue)) {
+                        alert(t('err_cpf'));
+                        cpfField?.focus();
+                        return;
+                    }
+                }
+
+                const customer = {
+                    name:        nameField.value.trim(),
+                    email:       emailField.value.trim(),
+                    address:     addressField.value.trim(),
+                    city:        cityField.value.trim(),
+                    postalCode:  zipField.value.trim(),
+                    countryCode,
+                    ...(countryCode === 'BR' && cpfValue ? { cpf: cpfValue } : {})
+                };
+
+                // USD prices: ARS 34900 → ~$36.74 USD at 950 rate
+                const RATE_ARS = 950;
+                const cartItems = cart.map(item => ({
+                    id:          item.id,
+                    name:        item.title,
+                    quantity:    1,
+                    priceUSD:    parseFloat((item.price / RATE_ARS).toFixed(2)),
+                    color:       item.color,
+                    garmentType: item.id.includes('hoodie') ? 'hoodie' :
+                                 item.id.includes('sweat')  ? 'sweatshirt' :
+                                 item.id.includes('kids')   ? 'kids_tshirt' : 'tshirt',
+                    imageUrl:    item.img ? new URL(item.img, window.location.href).href : undefined
+                }));
+
+                // Determine selected provider
+                const activeMethod = document.querySelector('.payment-method.active');
+                const provider = activeMethod?.getAttribute('data-provider') || 'stripe';
+                const countryCode = customer.countryCode;
+
                 document.getElementById('payment-processing')?.classList.remove('hidden');
                 finalPayBtn.classList.add('hidden');
                 document.querySelector('.payment-methods')?.classList.add('hidden');
-                
-                // INTEGRATION POINT: Send order to Logistics Service
-                const logisticsResult = await LogisticsService.createShipment({
-                    items: cart,
-                    timestamp: new Date().toISOString()
-                });
-                console.log('Logistics Shipment Created:', logisticsResult);
+                document.getElementById('checkout-form')?.classList.add('hidden');
 
-                setTimeout(() => {
+                try {
+                    let result;
+
+                    if (provider === 'mercadopago' && ['AR','BR','MX'].includes(countryCode)) {
+                        result = await AlazanAPI.checkoutMercadoPago({ items: cartItems, customer, countryCode });
+                        // Redirect to MercadoPago hosted checkout
+                        window.location.href = result.redirectUrl;
+                        return;
+                    } else {
+                        // Stripe — redirect to hosted checkout
+                        result = await AlazanAPI.checkoutStripe({ items: cartItems, customer, countryCode });
+                        window.location.href = result.redirectUrl;
+                        return;
+                    }
+
+                } catch (err) {
+                    console.error('[Alazan] Checkout error:', err.message);
                     document.getElementById('payment-processing')?.classList.add('hidden');
-                    document.getElementById('payment-success')?.classList.remove('hidden');
-                    // Clear cart after success
-                    cart = [];
-                    updateCartUI();
-                }, 2000);
+                    finalPayBtn.classList.remove('hidden');
+                    document.querySelector('.payment-methods')?.classList.remove('hidden');
+                    document.getElementById('checkout-form')?.classList.remove('hidden');
+                    alert(`${t('err_payment')} ${err.message}`);
+                }
             });
         }
-        
+
         const continueShopping = document.getElementById('continue-shopping');
-        if(continueShopping) {
+        if (continueShopping) {
             continueShopping.addEventListener('click', () => {
                 checkoutModal?.classList.remove('open');
                 setTimeout(() => {
