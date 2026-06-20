@@ -57,7 +57,28 @@ const characterData = [
     { id: 'sonya', name: 'Sonya Blade (Elite)', img: 'graphic_sonya_elite_hifi.png', cat: 'mk', fighter: 'SONYA' },
 
     // --- DC ---
-    { id: 'joker', name: 'The Joker (Elite)', img: 'graphic_joker_elite_nano_hifi.png', cat: 'dc', fighter: 'JOKER' }
+    { id: 'joker', name: 'The Joker (Elite)', img: 'graphic_joker_elite_nano_hifi.png', cat: 'dc', fighter: 'JOKER' },
+
+    // --- TEKKEN --- (coming soon)
+    { id: 'paul', name: 'Paul Phoenix (Elite)', img: null, cat: 'tekken', fighter: 'PAUL', comingSoon: true },
+    { id: 'king', name: 'King (Elite)', img: null, cat: 'tekken', fighter: 'KING', comingSoon: true },
+    { id: 'marshall', name: 'Marshall Law (Elite)', img: null, cat: 'tekken', fighter: 'MARSHALL', comingSoon: true },
+    { id: 'eddy', name: 'Eddy Gordo (Elite)', img: null, cat: 'tekken', fighter: 'EDDY', comingSoon: true },
+    { id: 'heihachi', name: 'Heihachi Mishima (Elite)', img: null, cat: 'tekken', fighter: 'HEIHACHI', comingSoon: true },
+    { id: 'kazuya', name: 'Kazuya Mishima (Elite)', img: null, cat: 'tekken', fighter: 'KAZUYA', comingSoon: true },
+
+    // --- GOD OF WAR --- (coming soon)
+    { id: 'kratos_classic', name: 'Kratos (Classic)', img: null, cat: 'gow', fighter: 'KRATOS', comingSoon: true },
+    { id: 'kratos_blade', name: 'Kratos (Blade of Chaos)', img: null, cat: 'gow', fighter: 'KRATOS', comingSoon: true },
+    { id: 'kratos_dual', name: 'Kratos (Dual Blades)', img: null, cat: 'gow', fighter: 'KRATOS', comingSoon: true },
+    { id: 'kratos_norse', name: 'Kratos (Norse)', img: null, cat: 'gow', fighter: 'KRATOS', comingSoon: true },
+    { id: 'thor_gow', name: 'Thor (Ragnarok)', img: null, cat: 'gow', fighter: 'THOR', comingSoon: true },
+
+    // --- HORIZON --- (coming soon)
+    { id: 'aloy', name: 'Aloy (Elite)', img: null, cat: 'horizon', fighter: 'ALOY', comingSoon: true },
+
+    // --- PLAYSTATION --- (coming soon)
+    { id: 'playstation', name: 'PlayStation (Elite)', img: null, cat: 'ps', fighter: 'PLAYSTATION', comingSoon: true }
 ];
 
 const kidsData = [
@@ -637,6 +658,29 @@ const AlazanAPI = {
             const typeTag = p.type === 'tshirt' ? t('tag_tshirt') : p.type === 'kids' ? t('tag_kids') : t('tag_heavy');
             const locale  = currentLang === 'pt' ? 'pt-BR' : 'en-US';
 
+            if (p.comingSoon) {
+                card.classList.add('coming-soon-card');
+                card.innerHTML = `
+                    <div class="zalando-gallery">
+                        <div class="main-image">
+                            <div class="t-shirt-composite coming-soon-overlay">
+                                <img src="${p.baseImg}" class="fabric-texture" alt="Texture" loading="lazy" style="filter: grayscale(1) opacity(0.4);">
+                                <div class="coming-soon-badge">COMING SOON</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product-info-container">
+                        <div class="product-meta">
+                            <div class="product-info">
+                                <h4>${p.name}</h4>
+                                <p>${typeTag}</p>
+                            </div>
+                            <div class="product-price" style="opacity:0.4;">— ARS</div>
+                        </div>
+                        <button class="add-to-cart-btn" disabled style="opacity:0.35;cursor:not-allowed;">COMING SOON</button>
+                    </div>
+                `;
+            } else {
             card.innerHTML = `
                 <div class="zalando-gallery">
                     <div class="main-image">
@@ -676,22 +720,24 @@ const AlazanAPI = {
                     <button class="add-to-cart-btn">${t('btn_add')}</button>
                 </div>
             `;
+            }
             
-            // Event Listeners for the card
-            card.querySelector('.add-to-cart-btn').addEventListener('click', function() { addToCart(this); });
-            // Size picker
-            card.querySelectorAll('.size-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    card.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
+            // Event Listeners — skip for coming soon cards
+            if (!p.comingSoon) {
+                card.querySelector('.add-to-cart-btn').addEventListener('click', function() { addToCart(this); });
+                card.querySelectorAll('.size-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        card.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                    });
                 });
-            });
-            card.querySelectorAll('.thumb-item').forEach(thumb => {
-                thumb.addEventListener('click', function() { 
-                    changeView(p.id, this.getAttribute('data-view'), this); 
+                card.querySelectorAll('.thumb-item').forEach(thumb => {
+                    thumb.addEventListener('click', function() {
+                        changeView(p.id, this.getAttribute('data-view'), this);
+                    });
                 });
-            });
+            }
 
             if (p.type === 'tshirt' && tshirtGrid) tshirtGrid.appendChild(card);
             else if (p.type === 'sweatshirt' && sweatshirtGrid) sweatshirtGrid.appendChild(card);
