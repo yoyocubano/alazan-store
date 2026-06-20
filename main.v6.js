@@ -393,7 +393,7 @@ function setLang(lang) {
 
 // ── ALAZAN STORE API CLIENT ───────────────────────────────────
 const AlazanAPI = {
-    BASE: window.ALAZAN_API_URL || 'http://localhost:3001/api',
+    BASE: window.ALAZAN_API_URL || 'https://backend-production-00e6.up.railway.app/api',
 
     async _post(path, body) {
         const res = await fetch(`${this.BASE}${path}`, {
