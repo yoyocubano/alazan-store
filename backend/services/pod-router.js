@@ -44,13 +44,9 @@ const reservaInk = require('./reservaink');
 function getPodProvider(countryCode) {
   const country = (countryCode || 'US').toUpperCase();
 
-  if (country === 'AR') return 'dimona';
-  if (country === 'MX') return 'dimona';
-
-  if (country === 'BR') {
-    const p = (process.env.BR_PROVIDER || 'dimona').toLowerCase();
-    // reservaink = inverse integration (handled by WooCommerce, not this router)
-    return p === 'reservaink' ? 'reservaink' : 'dimona';
+  // LATAM → Printify (global fulfillment, no Brazil CPF requirement)
+  if (country === 'AR' || country === 'MX' || country === 'BR' || country === 'CL' || country === 'CO' || country === 'PE') {
+    return (process.env.LATAM_PROVIDER || 'printify').toLowerCase();
   }
 
   if (country === 'US') {
@@ -61,8 +57,13 @@ function getPodProvider(countryCode) {
     return (process.env.CA_PROVIDER || 'printful').toLowerCase();
   }
 
-  // International fallback: Printful ships globally
-  return 'printful';
+  // EU / GB → Gelato
+  if (['DE','FR','IT','ES','NL','BE','AT','SE','DK','NO','FI','PL','PT','IE','GB'].includes(country)) {
+    return 'gelato';
+  }
+
+  // Global fallback → Printify
+  return 'printify';
 }
 
 /**
@@ -107,13 +108,6 @@ async function createOrder({ orderRef, customer, items, shipping }) {
   const country  = (customer.countryCode || 'US').toUpperCase();
   const provider = getPodProvider(country);
 
-  // CPF enforcement for Brazil
-  if (country === 'BR' && !customer.cpf) {
-    throw new Error('CPF is required for orders in Brazil (format: XXX.XXX.XXX-XX)');
-  }
-
-  // Reserva INK = inverse integration: order must exist in WooCommerce
-  // Live Ink pulls it automatically — nothing to call here
   if (provider === 'reservaink') {
     console.log(`[POD Router] ${orderRef} → Reserva INK (inverse): order will be pulled from WooCommerce`);
     return { provider: 'reservaink', orderId: null, note: 'Live Ink will pull order from WooCommerce automatically' };
@@ -155,46 +149,40 @@ const REGIONS = [
     country:      'AR',
     name:         'Argentina',
     currency:     'ARS',
-    podProvider:  'Dimona',
-    podEndpoint:  'https://api.dimonatee.com/api/v2021',
-    podAuth:      'Bearer Token',
-    podSandbox:   'Send "sample": true in payload — same endpoint',
-    podNote:      'Producción local en Buenos Aires. Sin aduanas, sin retenciones cambiarias.',
-    payments:     ['MercadoPago'],
-    restrictions: 'Sin restricciones de importación — manufactura 100% local',
-    deliveryDays: '3-7 días hábiles'
+    podProvider:  'Printify',
+    podEndpoint:  'https://api.printify.com/v1',
+    podAuth:      'Bearer + User-Agent header',
+    podSandbox:   'Cancel order manually in Printify dashboard',
+    podNote:      'Fulfillment global vía Printify. Envío internacional desde hub más cercano.',
+    payments:     ['MercadoPago', 'Stripe'],
+    restrictions: 'Ninguna',
+    deliveryDays: '7-15 días hábiles'
   },
   {
     country:      'BR',
     name:         'Brasil',
     currency:     'BRL',
-    podProvider:  process.env.BR_PROVIDER === 'reservaink' ? 'Reserva INK (Live Ink)' : 'Dimona',
-    podEndpoint:  process.env.BR_PROVIDER === 'reservaink'
-      ? 'Inverse — Live Ink polls your WooCommerce REST API'
-      : 'https://api.dimonatee.com/api/v2021',
-    podAuth:      process.env.BR_PROVIDER === 'reservaink'
-      ? 'WordPress OAuth (authorize via live.ink dashboard)'
-      : 'Bearer Token',
-    podSandbox:   process.env.BR_PROVIDER === 'reservaink'
-      ? 'Use Reserva INK test store in live.ink dashboard'
-      : 'Send "sample": true in payload',
-    podNote:      'CPF obligatorio (XXX.XXX.XXX-XX) para despacho por Correios.',
+    podProvider:  'Printify',
+    podEndpoint:  'https://api.printify.com/v1',
+    podAuth:      'Bearer + User-Agent header',
+    podSandbox:   'Cancel order manually in Printify dashboard',
+    podNote:      'Fulfillment global vía Printify. No requiere CPF.',
     payments:     ['MercadoPago', 'Stripe'],
-    restrictions: 'CPF requerido en checkout',
-    deliveryDays: '3-8 días hábiles'
+    restrictions: 'Ninguna',
+    deliveryDays: '7-15 días hábiles'
   },
   {
     country:      'MX',
     name:         'México',
     currency:     'MXN',
-    podProvider:  'Dimona',
-    podEndpoint:  'https://api.dimonatee.com/api/v2021',
-    podAuth:      'Bearer Token',
-    podSandbox:   'Send "sample": true in payload',
-    podNote:      'Hub local. Evita arancel USMCA 25% por producción en territorio MX.',
+    podProvider:  'Printify',
+    podEndpoint:  'https://api.printify.com/v1',
+    podAuth:      'Bearer + User-Agent header',
+    podSandbox:   'Cancel order manually in Printify dashboard',
+    podNote:      'Fulfillment global vía Printify.',
     payments:     ['MercadoPago', 'Stripe'],
-    restrictions: 'Producción local. Sin exposición a aranceles USMCA 2025.',
-    deliveryDays: '2-5 días hábiles'
+    restrictions: 'Ninguna',
+    deliveryDays: '7-15 días hábiles'
   },
   {
     country:      'US',
