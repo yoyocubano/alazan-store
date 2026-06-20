@@ -1,128 +1,107 @@
 /**
- * Reserva INK / Live Ink Service
- * Coverage: Brazil ONLY (national production + delivery)
+ * Reserva INK / Live Ink — Brazil only
  * Platform: https://live.ink
- * Plan: Essencial = R$399/month (~$72.55 USD)
- * Features: Premium fashion quality, neck labels, soft-hand eco inks
  *
- * WooCommerce integration requires:
- * - WordPress permalinks set to "Post name"
- * - Wordfence disabled during API credential setup
+ * ⚠️  INTEGRATION MODEL IS INVERSE — not an outgoing API.
  *
- * CPF format required in address: XXX.XXX.XXX-XX
+ * Live Ink servers connect TO your WooCommerce REST API (OAuth),
+ * not the other way around. There is no Bearer token you call from here.
+ *
+ * Setup flow:
+ *  1. Create brand profile at live.ink
+ *  2. Enter your WooCommerce store URL (must be HTTPS)
+ *  3. Live Ink redirects to your WP Admin for OAuth authorization
+ *     (WordPress Application Passwords — REST API read/write)
+ *  4. Live Ink polls your store for orders with status "processing" / "completed"
+ *  5. Production is triggered automatically on their side
+ *
+ * Requirements:
+ *  - WordPress Permalinks → "Post name" (not "Plain")
+ *  - Wordfence: allow Application Passwords (REST API auth)
+ *  - Your WooCommerce store accessible via public HTTPS URL
+ *
+ * Plans:
+ *  - Free (limited catalog)
+ *  - Essencial: R$399/month (~$72.55 USD) — full catalog, bulk publish, better margins
+ *
+ * Neck label: additional R$1.50/unit — configure in Live Ink dashboard
+ * CPF: must be collected in WooCommerce checkout and appear in order address
+ *      (Live Ink reads it from the order data it pulls from your store)
+ *
+ * Because Live Ink pulls orders autonomously, there is NO outgoing API to call
+ * from this backend service. Order fulfillment happens via WooCommerce webhook
+ * or polling — Live Ink handles it once authorized.
+ *
+ * For order status/tracking: Live Ink updates WooCommerce order status directly.
+ * You can read tracking from the WooCommerce order meta via WC REST API.
  */
+
+const WC_BASE  = process.env.WOOCOMMERCE_URL;    // e.g. https://yourdomain.com
+const WC_KEY   = process.env.WC_CONSUMER_KEY;    // WooCommerce REST API consumer key
+const WC_SECRET = process.env.WC_CONSUMER_SECRET;
+
 const axios = require('axios');
 
-const BASE_URL = 'https://api.live.ink/v1';
+// Read tracking info Live Ink wrote back to WooCommerce order
+async function getOrderTracking(wcOrderId) {
+  if (!WC_BASE || !WC_KEY || !WC_SECRET) {
+    throw new Error('WooCommerce credentials not configured (WC_CONSUMER_KEY / WC_CONSUMER_SECRET)');
+  }
 
-const client = axios.create({
-  baseURL: BASE_URL,
-  headers: {
-    Authorization: `Bearer ${process.env.RESERVAINK_API_KEY}`,
-    'Content-Type': 'application/json'
-  },
-  timeout: 20000
-});
-
-/**
- * Get shipping rates (Correios + private carriers)
- * CPF is mandatory for Correios labels
- */
-async function getShippingRates({ items, recipient }) {
-  const { data } = await client.post('/shipping/rates', {
-    destination: {
-      postal_code: recipient.postalCode,
-      city:        recipient.city,
-      state:       recipient.state || '',
-      country:     'BR'
-    },
-    items: items.map(i => ({
-      quantity: i.quantity || 1,
-      weight:   0.2 // kg per garment (estimate)
-    }))
+  const url = `${WC_BASE}/wp-json/wc/v3/orders/${wcOrderId}`;
+  const { data } = await axios.get(url, {
+    auth: { username: WC_KEY, password: WC_SECRET },
+    timeout: 10000
   });
-  return data.rates || data;
-}
 
-/**
- * Create production order in Reserva INK
- * recipient.cpf REQUIRED for Brazilian dispatch via Correios
- * Format: XXX.XXX.XXX-XX
- */
-async function createOrder({ orderRef, customer, items }) {
-  if (!customer.cpf) {
-    throw new Error('CPF is required for Reserva INK orders in Brazil (format: XXX.XXX.XXX-XX)');
-  }
-
-  // Validate CPF format
-  const cpfRegex = /^\d{3}\.\d{3}\.\d{3}-\d{2}$/;
-  if (!cpfRegex.test(customer.cpf)) {
-    throw new Error(`Invalid CPF format: ${customer.cpf}. Must be XXX.XXX.XXX-XX`);
-  }
-
-  const body = {
-    external_id: orderRef,
-    customer: {
-      name:  customer.name,
-      email: customer.email,
-      cpf:   customer.cpf,
-      phone: customer.phone || ''
-    },
-    shipping_address: {
-      street:      customer.address,
-      city:        customer.city,
-      state:       customer.state || 'SP',
-      postal_code: customer.postalCode,
-      country:     'BR',
-      cpf:         customer.cpf  // also on address for label generation
-    },
-    items: items.map(item => ({
-      product_id:   item.reservainkProductId || null,
-      size:         item.size || 'M',
-      color:        item.color || 'branco',
-      quantity:     item.quantity || 1,
-      print_files: {
-        front: item.imageUrl || item.graphicUrl,
-        // Optional: back print
-        ...(item.backImageUrl ? { back: item.backImageUrl } : {})
-      },
-      // Neck label: custom brand label (R$1.50/unit extra)
-      neck_label: item.neckLabelUrl || process.env.RESERVAINK_NECK_LABEL_URL || null
-    }))
+  // Live Ink writes tracking to order meta_data
+  const trackingMeta = data.meta_data?.find(m => m.key === '_tracking_number' || m.key === 'tracking_number');
+  return {
+    orderId:       wcOrderId,
+    status:        data.status,
+    trackingNumber: trackingMeta?.value || null,
+    metaData:      data.meta_data
   };
-
-  const { data } = await client.post('/orders', body);
-  return data;
 }
 
-/**
- * Confirm order (send to production queue)
- */
-async function confirmOrder(orderId) {
-  const { data } = await client.post(`/orders/${orderId}/submit`);
-  return data;
+// Verify Live Ink authorization is working by checking a WC order exists
+async function verifyConnection() {
+  if (!WC_BASE || !WC_KEY || !WC_SECRET) {
+    return { connected: false, reason: 'Missing WC_CONSUMER_KEY / WC_CONSUMER_SECRET in .env' };
+  }
+  try {
+    const { data } = await axios.get(`${WC_BASE}/wp-json/wc/v3/orders?per_page=1`, {
+      auth: { username: WC_KEY, password: WC_SECRET },
+      timeout: 8000
+    });
+    return { connected: true, storeUrl: WC_BASE, ordersAccessible: Array.isArray(data) };
+  } catch (err) {
+    return { connected: false, reason: err.message };
+  }
 }
 
-/**
- * Get order status + Correios tracking code
- */
-async function getOrder(orderId) {
-  const { data } = await client.get(`/orders/${orderId}`);
-  return data;
+// Reserva INK does not support outgoing createOrder / confirmOrder calls.
+// Order creation happens via WooCommerce order status → Live Ink polls automatically.
+async function createOrder() {
+  throw new Error(
+    'Reserva INK (Live Ink) uses inverse integration: ' +
+    'create the order in WooCommerce and Live Ink will pull it automatically. ' +
+    'No outgoing API call needed.'
+  );
 }
 
-/**
- * Cancel order (allowed before production starts)
- */
-async function cancelOrder(orderId) {
-  const { data } = await client.delete(`/orders/${orderId}`);
-  return data;
+async function confirmOrder() {
+  throw new Error('Reserva INK auto-confirms from WooCommerce order status. No manual confirm needed.');
+}
+
+async function getOrder(wcOrderId) {
+  return getOrderTracking(wcOrderId);
 }
 
 module.exports = {
   createOrder,
   confirmOrder,
   getOrder,
-  cancelOrder,
-  getShippingRates
+  getOrderTracking,
+  verifyConnection
 };

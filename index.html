@@ -3,12 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Alazan Store - Premium Gaming Apparel. High-grammage streetwear and limited elite series designed for the gaming community.">
-    <meta name="keywords" content="gaming apparel, streetwear, mortal kombat, street fighter, high grammage t-shirts, hoodies argentina">
-    <title>Alazan Store | Premium Gaming Apparel & Limited Streetwear</title>
-    
-    <!-- FAVICON -->
-    <link rel="icon" type="image/png" href="favicon.png">
+    <meta name="description" content="Alazan Store — Ropa gamer premium. Camisetas 240 GSM, hoodies y sudaderas con diseños exclusivos de Mortal Kombat y Street Fighter. Envíos a AR, MX, BR, US y CA.">
+    <meta name="keywords" content="ropa gamer, camisetas gaming, streetwear, mortal kombat, street fighter, camisetas 240 gsm, hoodies argentina, gaming apparel">
+    <meta name="author" content="Alazan Store">
+    <meta name="robots" content="index, follow">
+    <title>Alazan Store | Ropa Gamer Premium · Mortal Kombat & Street Fighter</title>
+
+    <!-- Open Graph / Social -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://alazanstore.shop/">
+    <meta property="og:title" content="Alazan Store | Ropa Gamer Premium">
+    <meta property="og:description" content="Camisetas 240 GSM, hoodies y sudaderas con diseños exclusivos de Mortal Kombat y Street Fighter. Envíos a AR, MX, BR, US y CA.">
+    <meta property="og:image" content="https://alazanstore.shop/og-image.png">
+    <meta property="og:image:alt" content="Alazan Store — Ropa Gamer Premium">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="es_AR">
+    <meta property="og:locale:alternate" content="en_US">
+    <meta property="og:locale:alternate" content="pt_BR">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@alazanstore">
+    <meta name="twitter:title" content="Alazan Store | Ropa Gamer Premium">
+    <meta name="twitter:description" content="Camisetas 240 GSM · Hoodies · Sudaderas. Diseños exclusivos de Mortal Kombat y Street Fighter.">
+    <meta name="twitter:image" content="https://alazanstore.shop/og-image.png">
+
+    <!-- Canonical -->
+    <link rel="canonical" href="https://alazanstore.shop/">
+
+    <!-- FAVICON SVG inline -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23000'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='serif' font-weight='bold' font-size='20' fill='%23fff'%3EA%3C/text%3E%3C/svg%3E">
+    <link rel="icon" type="image/png" href="favicon.png" sizes="32x32">
     
     <!-- CSS WITH CACHE BUSTING -->
     <link rel="stylesheet" href="styles.css?v=3">
@@ -17,6 +43,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+      // Set to Railway/Render backend URL after deploy
+      window.ALAZAN_API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? 'http://localhost:3001/api'
+        : 'https://alazan-store-backend.up.railway.app/api';
+    </script>
 </head>
 <body>
 
@@ -36,6 +68,8 @@
             <a href="javascript:void(0)" aria-label="Buscar" data-i18n="nav_search">SEARCH</a>
             <a href="javascript:void(0)" id="open-cart" aria-label="Ver Carrito"><span data-i18n="nav_cart">CART</span> (<span id="nav-cart-count">0</span>)</a>
             <div class="lang-switcher" role="group" aria-label="Language">
+                <button class="lang-btn" data-lang="es" aria-label="Español">ES</button>
+                <span class="lang-sep">|</span>
                 <button class="lang-btn active" data-lang="en" aria-label="English">EN</button>
                 <span class="lang-sep">|</span>
                 <button class="lang-btn" data-lang="pt" aria-label="Português">PT</button>
@@ -141,7 +175,7 @@
                     <span class="hero-line" style="font-size: clamp(4rem, 12vw, 10rem); line-height: 0.8;">ELITE</span>
                     <span class="hero-line hero-line--outline" style="font-size: clamp(4rem, 12vw, 10rem); line-height: 0.8;">COLLECTION</span>
                 </h1>
-                <div class="hero-sub" style="margin-top: 3.5rem;">HIGH GRAMMAGE PREMIUM COTTON<br>ARTISAN PRINTED IN ARGENTINA</div>
+                <div class="hero-sub" style="margin-top: 3.5rem;" data-i18n="hero_sub">HIGH GRAMMAGE PREMIUM COTTON<br>ARTISAN PRINTED IN ARGENTINA</div>
                 <a href="#tshirts" class="hero-cta" data-i18n="hero_cta">EXPLORAR CATÁLOGO</a>
             </div>
         </section>

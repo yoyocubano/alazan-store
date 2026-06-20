@@ -255,6 +255,75 @@ const TRANSLATIONS = {
     tab_women:           'MULHER',
     tab_men:             'HOMEM',
     tab_kids_tab:        'KIDS',
+  },
+  es: {
+    nav_search:          'BUSCAR',
+    nav_cart:            'CESTA',
+    nav_all:             'TODOS LOS PRODUCTOS',
+    nav_mk_roster:       'ELENCO MORTAL KOMBAT',
+    nav_sf_roster:       'ELENCO STREET FIGHTER',
+    nav_garments:        'PRENDAS',
+    nav_tshirts:         'CAMISETAS ELITE (240 GSM)',
+    nav_sweatshirts:     'SUDADERAS (400 GSM)',
+    nav_hoodies:         'SUDADERAS CON CAPUCHA',
+    nav_kids:            'COLECCIÓN BABALITY',
+    nav_kids_roster:     'ELENCO INFANTIL',
+    nav_kids_tshirts:    'CAMISETAS NIÑOS',
+    nav_kids_access:     'ACCESORIOS BABALITY',
+    nav_kids_info:       'Prendas diseñadas para la comodidad y el estilo de los más pequeños.',
+    nav_help:            'AYUDA',
+    nav_shipping:        'ENVÍOS Y DEVOLUCIONES',
+    nav_size_guide:      'GUÍA DE TALLAS',
+    nav_contact:         'CONTACTO',
+    hero_eyebrow:        'VISTE LO QUE JUEGAS',
+    hero_sub:            'ALGODÓN PREMIUM DE ALTO GRAMAJE\nIMPRESO ARTESANALMENTE EN ARGENTINA',
+    hero_cta:            'EXPLORAR CATÁLOGO',
+    sec_tshirts:         'T-SHIRTS',
+    sec_sweatshirts:     'ELITE CREWNECK SERIES · SUDADERAS',
+    sec_hoodies:         'PREMIUM HOODIE SERIES · HOODIES',
+    sec_kids:            'KIDS BABALITY SERIES · T-SHIRTS',
+    tag_tshirt:          'SERIE ELITE LIMITADA · 240 GSM',
+    tag_kids:            'SERIE BABALITY KIDS · 100% ALGODÓN',
+    tag_heavy:           'PESO PREMIUM · 400 GSM',
+    color_black:         'Negro',
+    color_white:         'Blanco',
+    color_gray:          'Gris',
+    btn_add:             'AGREGAR AL CARRO',
+    btn_added:           '✓ AGREGADO',
+    cart_title:          'TU CESTA',
+    cart_empty:          'Tu cesta está vacía',
+    cart_total:          'TOTAL',
+    btn_checkout:        'PROCEDER AL PAGO',
+    btn_remove:          'Eliminar',
+    checkout_title:      'CHECKOUT SEGURO',
+    label_name:          'NOMBRE COMPLETO',
+    label_email:         'EMAIL',
+    label_address:       'DIRECCIÓN DE ENVÍO',
+    label_city:          'CIUDAD',
+    label_zip:           'CÓDIGO POSTAL',
+    label_cpf:           'CPF (requerido para Brasil)',
+    ssl_badge:           '🔒 PAGO ENCRIPTADO SSL · TOTAL:',
+    btn_pay:             'CONFIRMAR Y PAGAR',
+    processing:          'PROCESANDO PAGO...',
+    success_title:       '¡GRACIAS POR TU PEDIDO!',
+    success_body:        'Enviamos un email con los detalles de tu pedido.',
+    btn_continue:        'VOLVER A LA TIENDA',
+    err_required:        'Por favor completá todos los campos requeridos.',
+    err_cpf:             'CPF inválido. Formato requerido: XXX.XXX.XXX-XX',
+    err_payment:         'Error en el pago:',
+    footer_buy:          'COMPRAR',
+    footer_support:      'SOPORTE',
+    footer_legal:        'LEGAL',
+    footer_shipping_f:   'ENVÍOS Y DEVOLUCIONES',
+    footer_size_guide:   'GUÍA DE TALLAS',
+    footer_returns:      'DEVOLUCIONES',
+    footer_terms:        'TÉRMINOS DE SERVICIO',
+    footer_privacy:      'POLÍTICA DE PRIVACIDAD',
+    footer_legal_notice: 'AVISO LEGAL',
+    footer_tagline:      'ROPA GAMER PREMIUM. STREETWEAR DE ALTO NIVEL DISEÑADO PARA LA ÉLITE.',
+    tab_women:           'MUJER',
+    tab_men:             'HOMBRE',
+    tab_kids_tab:        'NIÑOS',
   }
 };
 
@@ -263,7 +332,9 @@ let currentLang = (() => {
   const saved = localStorage.getItem('alazan_lang');
   if (saved && TRANSLATIONS[saved]) return saved;
   const browser = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
-  return browser.startsWith('pt') ? 'pt' : 'en';
+  if (browser.startsWith('pt')) return 'pt';
+  if (browser.startsWith('es')) return 'es';
+  return 'en';
 })();
 
 function t(key) {
@@ -277,7 +348,7 @@ function applyTranslations() {
     if (el.tagName === 'INPUT' && el.placeholder) {
       el.placeholder = t(key);
     } else {
-      el.textContent = t(key);
+      el.innerHTML = t(key).replace(/\n/g, '<br>');
     }
   });
   // Update lang switcher active state
@@ -285,7 +356,7 @@ function applyTranslations() {
     btn.classList.toggle('active', btn.getAttribute('data-lang') === currentLang);
   });
   // Update html lang attr
-  document.documentElement.lang = currentLang === 'pt' ? 'pt-BR' : 'en';
+  document.documentElement.lang = currentLang === 'pt' ? 'pt-BR' : currentLang === 'es' ? 'es' : 'en';
   // Re-render product grids (they use t() inline)
   if (typeof renderProducts === 'function') renderProducts();
   // Update cart UI strings
@@ -596,12 +667,26 @@ const AlazanAPI = {
                         <div class="swatch" style="background: #ffffff;" data-color="#ffffff" title="${t('color_white')}"></div>
                         <div class="swatch" style="background: #f0f0f0;" data-color="#f0f0f0" title="${t('color_gray')}"></div>
                     </div>
+                    <div class="size-picker">
+                        ${(p.type === 'kids'
+                            ? ['2', '4', '6', '8', '10', '12']
+                            : ['XS', 'S', 'M', 'L', 'XL', 'XXL']
+                        ).map((s, i) => `<button class="size-btn${i === 2 ? ' active' : ''}" data-size="${s}">${s}</button>`).join('')}
+                    </div>
                     <button class="add-to-cart-btn">${t('btn_add')}</button>
                 </div>
             `;
             
             // Event Listeners for the card
             card.querySelector('.add-to-cart-btn').addEventListener('click', function() { addToCart(this); });
+            // Size picker
+            card.querySelectorAll('.size-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    card.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                });
+            });
             card.querySelectorAll('.thumb-item').forEach(thumb => {
                 thumb.addEventListener('click', function() { 
                     changeView(p.id, this.getAttribute('data-view'), this); 
@@ -643,12 +728,18 @@ const AlazanAPI = {
                     swatch.classList.add('active');
                     
                     const color = swatch.getAttribute('data-color');
+                    const composite = card.querySelector('.t-shirt-composite');
                     if (color === '#000000') {
                         texture.style.filter = isHeavy ? 'brightness(0.12) contrast(1)' : 'brightness(0.15) contrast(1.2)';
+                        if (composite) composite.style.background = 'transparent';
                     } else if (color === '#ffffff') {
-                        texture.style.filter = 'brightness(1) contrast(1)';
+                        // Wash the knit texture to crisp white — same fabric feel as black but light
+                        texture.style.filter = 'brightness(2.5) contrast(0.55) saturate(0)';
+                        // Dark bg so white shirt silhouette is clearly visible
+                        if (composite) composite.style.background = '#4a4a4a';
                     } else if (color === '#f0f0f0') {
-                        texture.style.filter = isHeavy ? 'brightness(0.6) contrast(1)' : 'brightness(0.7) contrast(1)';
+                        texture.style.filter = isHeavy ? 'brightness(0.55) contrast(0.9)' : 'brightness(0.65) contrast(0.9)';
+                        if (composite) composite.style.background = 'transparent';
                     }
                     if(colorSync) colorSync.style.backgroundColor = color;
                 });
@@ -673,6 +764,14 @@ const AlazanAPI = {
                 indicator.style.width = activeTab.offsetWidth + 'px';
             }
         }
+
+        // Wire tab buttons (MUJER / HOMBRE / NIÑOS)
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabName = btn.getAttribute('data-tab');
+                if (tabName) switchTab(tabName);
+            });
+        });
 
         document.querySelectorAll('.accordion-header').forEach(acc => {
             acc.addEventListener('click', function() {
@@ -725,11 +824,13 @@ const AlazanAPI = {
         tabBtns.forEach(btn => btn.classList.remove('active'));
         tabPanes.forEach(pane => pane.classList.remove('active'));
         
-        const activeBtn = Array.from(tabBtns).find(btn => btn.textContent.toLowerCase().includes(tabName));
-        if(activeBtn && indicator) {
+        const activeBtn = Array.from(tabBtns).find(btn => btn.getAttribute('data-tab') === tabName);
+        if(activeBtn) {
             activeBtn.classList.add('active');
-            indicator.style.left = activeBtn.offsetLeft + 'px';
-            indicator.style.width = activeBtn.offsetWidth + 'px';
+            if (indicator) {
+                indicator.style.left = activeBtn.offsetLeft + 'px';
+                indicator.style.width = activeBtn.offsetWidth + 'px';
+            }
         }
         
         const targetId = tabName === 'niños' ? 'tab-niños' : 'tab-adultos';
@@ -762,17 +863,25 @@ const AlazanAPI = {
             if (activeSwatch) {
                 const color = activeSwatch.getAttribute('data-color');
                 const isHeavy = card.classList.contains('type-sweatshirt') || card.classList.contains('type-hoodie');
-                if (color === '#000000') fabricTexture.style.filter = isHeavy ? 'brightness(0.12) contrast(1)' : 'brightness(0.15) contrast(1.2)';
-                else if (color === '#ffffff') fabricTexture.style.filter = 'brightness(1) contrast(1)';
-                else if (color === '#f0f0f0') fabricTexture.style.filter = isHeavy ? 'brightness(0.6) contrast(1)' : 'brightness(0.7) contrast(1)';
+                if (color === '#000000') { fabricTexture.style.filter = isHeavy ? 'brightness(0.12) contrast(1)' : 'brightness(0.15) contrast(1.2)'; composite.style.background = 'transparent'; }
+                else if (color === '#ffffff') { fabricTexture.style.filter = 'brightness(2.5) contrast(0.55) saturate(0)'; composite.style.background = '#4a4a4a'; }
+                else if (color === '#f0f0f0') { fabricTexture.style.filter = isHeavy ? 'brightness(0.55) contrast(0.9)' : 'brightness(0.65) contrast(0.9)'; composite.style.background = 'transparent'; }
             }
+            graphic.style.transform = card.dataset.graphicScale
+                ? `translate(-50%, -50%) ${card.dataset.graphicScale}`
+                : 'translate(-50%, -50%) scale(1)';
+            graphic.style.marginTop = card.dataset.graphicMargin || '-5%';
         } else if (viewType === 'details') {
-            fabricTexture.src = 'zara_cotton_texture.png';
-            fabricTexture.style.filter = 'none';
-            fabricTexture.style.width = '100%';
-            fabricTexture.style.height = '100%';
-            fabricTexture.style.objectFit = 'cover';
-            graphic.style.transform = 'translate(-50%, -50%) scale(1.5)';
+            // Show graphic close-up — keep shirt as-is, zoom the graphic
+            const activeSwatch = card.querySelector('.swatch.active');
+            const color = activeSwatch?.getAttribute('data-color') || '#000000';
+            const isH = card.classList.contains('type-sweatshirt') || card.classList.contains('type-hoodie');
+            fabricTexture.src = product.baseImg;
+            if (color === '#000000') fabricTexture.style.filter = isH ? 'brightness(0.12) contrast(1)' : 'brightness(0.15) contrast(1.2)';
+            else if (color === '#ffffff') { fabricTexture.style.filter = 'brightness(2.5) contrast(0.55) saturate(0)'; composite.style.background = '#4a4a4a'; }
+            else fabricTexture.style.filter = isH ? 'brightness(0.55) contrast(0.9)' : 'brightness(0.65) contrast(0.9)';
+            graphic.style.transform = 'translate(-50%, -50%) scale(1.6)';
+            graphic.style.marginTop = '0%';
         }
     }
 
@@ -782,14 +891,20 @@ const AlazanAPI = {
         if (!product) return;
 
         const activeColorSwatch = card.querySelector('.swatch.active');
-        const colorName = activeColorSwatch ? activeColorSwatch.getAttribute('title') : 'Negro';
-        
-        cart.push({ 
+        const colorName  = activeColorSwatch ? activeColorSwatch.getAttribute('title') : 'Negro';
+        const colorHex   = activeColorSwatch ? activeColorSwatch.getAttribute('data-color') : '#000000';
+        const activeSizeBtn = card.querySelector('.size-btn.active');
+        const size = activeSizeBtn ? activeSizeBtn.getAttribute('data-size') : 'M';
+
+        cart.push({
             id: product.id,
-            title: product.name, 
-            color: colorName, 
-            price: product.price, 
-            img: product.img 
+            title: product.name,
+            type: product.type,
+            color: colorName,
+            colorHex,
+            size,
+            price: product.price,
+            img: product.img
         });
         
         buttonElement.textContent = t('btn_added');
@@ -831,7 +946,7 @@ const AlazanAPI = {
                     <div class="cart-item-details">
                         <div>
                             <div class="cart-item-title">${item.title}</div>
-                            <div class="cart-item-color">${item.color}</div>
+                            <div class="cart-item-color">${item.color} · ${item.size}</div>
                             <div class="cart-item-price">${item.price.toLocaleString(locale)} ARS</div>
                         </div>
                         <div class="remove-item" data-index="${index}">${t('btn_remove')}</div>
@@ -998,16 +1113,18 @@ const AlazanAPI = {
                     quantity:    1,
                     priceUSD:    parseFloat((item.price / RATE_ARS).toFixed(2)),
                     color:       item.color,
-                    garmentType: item.id.includes('hoodie') ? 'hoodie' :
-                                 item.id.includes('sweat')  ? 'sweatshirt' :
-                                 item.id.includes('kids')   ? 'kids_tshirt' : 'tshirt',
-                    imageUrl:    item.img ? new URL(item.img, window.location.href).href : undefined
+                    colorHex:    item.colorHex || '#000000',
+                    size:        item.size || 'M',
+                    garmentType: item.type === 'kids'  ? 'kids' :
+                                 item.id.includes('hoodie') ? 'hoodie' :
+                                 item.id.includes('sweat')  ? 'sweatshirt' : 'tshirt',
+                    imageUrl:    item.img ? new URL(item.img, window.location.href).href : undefined,
+                    graphicUrl:  item.img ? new URL(item.img, window.location.href).href : undefined
                 }));
 
                 // Determine selected provider
                 const activeMethod = document.querySelector('.payment-method.active');
                 const provider = activeMethod?.getAttribute('data-provider') || 'stripe';
-                const countryCode = customer.countryCode;
 
                 document.getElementById('payment-processing')?.classList.remove('hidden');
                 finalPayBtn.classList.add('hidden');

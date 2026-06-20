@@ -1,19 +1,26 @@
 /**
  * Dimona API Service
  * Covers: AR (Buenos Aires), BR (Brazil), MX (Mexico), US (Chicago + Miami)
- * API Docs: https://api.dimonatee.com
- * Files: PNG 300 DPI with transparency
+ * Docs:   https://api.dimonatee.com
+ * Auth:   Bearer Token (private, regionalized)
+ * Files:  PNG 300 DPI with transparency
  * Methods: DTG, DTF (1200 DPI), Embroidery
+ *
+ * Sandbox: No separate endpoint. Send payload with "sample": true to skip
+ * billing and production queue on the same production endpoint.
  */
 const axios = require('axios');
+const { getDimonaVariant, getDimonaProductId } = require('../config/sku-map');
 
-const BASE_URL = 'https://api.dimonatee.com';
+// Correct versioned base URL per Dimona docs
+const BASE_URL = 'https://api.dimonatee.com/api/v2021';
 
 const client = axios.create({
   baseURL: BASE_URL,
   headers: {
     Authorization: `Bearer ${process.env.DIMONA_API_KEY}`,
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
+    Accept: 'application/json'
   },
   timeout: 20000
 });
@@ -85,21 +92,31 @@ async function createOrder({ orderRef, customer, items, shipping }) {
         : {})
     },
     shipping_method: shipping?.method || 'STANDARD',
-    items: items.map(item => ({
-      product_type:   PRODUCT_TYPE_MAP[item.garmentType] || 'CAMISETA',
-      print_method:   item.printMethod || PRINT_METHOD[item.garmentType] || 'DTG',
-      size:           item.size || 'M',
-      color:          item.color || 'white',
-      quantity:       item.quantity || 1,
-      // Front print file — PNG 300 DPI with transparency required
-      files: [
-        {
+    // Sandbox flag: prevents billing + production queue on same endpoint
+    ...(process.env.NODE_ENV !== 'production' ? { sample: true } : {}),
+    items: items.map(item => {
+      const type      = item.garmentType || 'tshirt';
+      const colorHex  = item.colorHex   || '#000000';
+      const size      = item.size        || 'M';
+      const variantId = getDimonaVariant(type, colorHex, size);
+      const productId = getDimonaProductId(type);
+
+      return {
+        product_type: PRODUCT_TYPE_MAP[type] || 'CAMISETA',
+        print_method: item.printMethod || PRINT_METHOD[type] || 'DTG',
+        size,
+        color: colorHex,
+        quantity: item.quantity || 1,
+        // SKU IDs (populated once registered in Dimona dashboard)
+        ...(productId ? { product_id: productId }   : {}),
+        ...(variantId ? { variant_id: variantId }   : {}),
+        files: [{
           placement: 'front',
           url:       item.imageUrl || item.graphicUrl,
           dpi:       300
-        }
-      ]
-    }))
+        }]
+      };
+    })
   };
 
   const { data } = await client.post('/orders', body);

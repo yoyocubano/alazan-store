@@ -1,4 +1,16 @@
+/**
+ * Printful API Service
+ * Auth:  Scoped Private Token (Bearer) — configure scopes in Printful Developer Portal
+ *        OAuth 2.0 also supported for multi-store integrations
+ * Docs:  https://developers.printful.com
+ * Hubs:  US (Charlotte, Dallas, LA, Phoenix), CA (Mississauga), MX (Tijuana), BR (Rio de Janeiro)
+ *
+ * Sandbox: No isolated sandbox. Orders must be created on production endpoint and
+ * MANUALLY CANCELLED in the Printful dashboard before reaching print stage.
+ * Add store-level test mode in: Printful → Store → Settings → API
+ */
 const axios = require('axios');
+const { getPrintfulVariant } = require('../config/sku-map');
 
 const BASE_URL = 'https://api.printful.com';
 
@@ -71,17 +83,17 @@ async function createOrder({ orderRef, customer, items, shipping }) {
       email:        customer.email
     },
     items: items.map(item => ({
-      external_id:   item.cartItemId,
-      variant_id:    getVariantId(item.garmentType, item.size || 'M'),
-      quantity:      item.quantity || 1,
-      name:          item.name,
-      retail_price:  (item.priceUSD || 15).toFixed(2),
-      files: [
-        {
-          type: 'front',
-          url:  item.graphicUrl  // Public URL of the graphic PNG
-        }
-      ]
+      external_id:  item.cartItemId,
+      // Use sku-map first, fall back to legacy getVariantId
+      variant_id:   getPrintfulVariant(item.garmentType, item.colorHex || '#000000', item.size || 'M')
+                    || getVariantId(item.garmentType, item.size || 'M'),
+      quantity:     item.quantity || 1,
+      name:         item.name,
+      retail_price: (item.priceUSD || 15).toFixed(2),
+      files: [{
+        type: 'front',
+        url:  item.graphicUrl
+      }]
     }))
   };
 
