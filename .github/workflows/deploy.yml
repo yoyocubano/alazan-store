@@ -10,15 +10,27 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Deploy frontend to IONOS via SFTP
-        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
-        with:
-          server: ${{ secrets.IONOS_HOST }}
-          username: ${{ secrets.IONOS_USER }}
-          password: ${{ secrets.IONOS_PASSWORD }}
-          port: 22
-          local_path: './*'
-          remote_path: '/alazanstore.shop/public'
-          sftp_only: true
-          args: '-o StrictHostKeyChecking=no'
-          delete_remote_files: false
+      - name: Install sshpass
+        run: sudo apt-get install -y sshpass
+
+      - name: Deploy to IONOS via SFTP batch
+        env:
+          SSHPASS: ${{ secrets.IONOS_PASSWORD }}
+          HOST: ${{ secrets.IONOS_HOST }}
+          USER: ${{ secrets.IONOS_USER }}
+        run: |
+          REMOTE="/alazanstore.shop/public"
+
+          # Build batch file with all root-level files
+          BATCH=$(mktemp)
+          for f in $(find . -maxdepth 1 -type f ! -name '.*'); do
+            fname="${f#./}"
+            echo "put $f $REMOTE/$fname" >> "$BATCH"
+          done
+
+          echo "--- Batch commands ---"
+          cat "$BATCH"
+          echo "---"
+
+          sshpass -e sftp -o StrictHostKeyChecking=no -b "$BATCH" "$USER@$HOST"
+          echo "Deploy complete"
