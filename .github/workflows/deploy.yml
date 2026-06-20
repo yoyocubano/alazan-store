@@ -14,12 +14,11 @@ jobs:
         run: sudo apt-get install -y sshpass
 
       - name: Deploy to IONOS via SFTP batch
-        env:
-          SSHPASS: ${{ secrets.IONOS_PASSWORD }}
-          HOST: ${{ secrets.IONOS_HOST }}
-          USER: ${{ secrets.IONOS_USER }}
         run: |
           REMOTE="/alazanstore.shop/public"
+          SFTP_HOST="${{ secrets.IONOS_HOST }}"
+          SFTP_USER="${{ secrets.IONOS_USER }}"
+          SFTP_PASS="${{ secrets.IONOS_PASSWORD }}"
 
           # Build batch file with all root-level files
           BATCH=$(mktemp)
@@ -28,9 +27,6 @@ jobs:
             echo "put $f $REMOTE/$fname" >> "$BATCH"
           done
 
-          echo "--- Batch commands ---"
-          cat "$BATCH"
-          echo "---"
-
-          sshpass -e sftp -o StrictHostKeyChecking=no -b "$BATCH" "$USER@$HOST"
+          echo "Uploading $(wc -l < "$BATCH") files..."
+          sshpass -p "$SFTP_PASS" sftp -o StrictHostKeyChecking=no -b "$BATCH" "$SFTP_USER@$SFTP_HOST"
           echo "Deploy complete"
