@@ -10,15 +10,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Deploy frontend to IONOS via SFTP
+      - name: Deploy frontend to IONOS via SFTP (lftp mirror)
         uses: wlixcc/SFTP-Deploy-Action@v1.2.4
         with:
           server: ${{ secrets.IONOS_HOST }}
           username: ${{ secrets.IONOS_USER }}
           password: ${{ secrets.IONOS_PASSWORD }}
           port: 22
-          local_path: './*'
+          local_path: './'
           remote_path: '/alazanstore.shop/public'
-          sftp_only: true
+          sftp_only: false
           args: '-o StrictHostKeyChecking=no'
-          delete_remote_files: true
+          delete_remote_files: false
