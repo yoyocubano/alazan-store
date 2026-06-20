@@ -10,18 +10,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Deploy to IONOS via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      - name: Deploy frontend to IONOS via SFTP
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
         with:
           server: ${{ secrets.IONOS_HOST }}
           username: ${{ secrets.IONOS_USER }}
           password: ${{ secrets.IONOS_PASSWORD }}
-          server-dir: /alazanstore.shop/public/
-          protocol: ftps
-          port: 21
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/node_modules/**
-            backend/.env
-            backend/db/orders.json
+          port: 22
+          local_path: './*'
+          remote_path: '/alazanstore.shop/public'
+          sftp_only: true
+          args: '-o StrictHostKeyChecking=no'
+          delete_remote_files: true
