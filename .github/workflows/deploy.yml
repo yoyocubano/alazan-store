@@ -28,5 +28,5 @@ jobs:
           done
 
           echo "Uploading $(wc -l < "$BATCH") files..."
-          sshpass -p "$SFTP_PASS" sftp -o StrictHostKeyChecking=no -b "$BATCH" "$SFTP_USER@$SFTP_HOST"
+          sshpass -p "$SFTP_PASS" sftp -P 22 -o StrictHostKeyChecking=no -o PubkeyAuthentication=no -b "$BATCH" "$SFTP_USER@$SFTP_HOST"
           echo "Deploy complete"
