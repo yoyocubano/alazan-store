@@ -9,6 +9,7 @@ const checkoutRoutes = require('./routes/checkout');
 const ordersRoutes   = require('./routes/orders');
 const podRoutes      = require('./routes/pod');
 const webhookRoutes  = require('./routes/webhooks');
+const connectRoutes  = require('./routes/connect');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -38,6 +39,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/checkout', checkoutRoutes);
 app.use('/api/orders',   ordersRoutes);
 app.use('/api/pod',      podRoutes);
+app.use('/api/connect',  connectRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

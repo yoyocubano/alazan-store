@@ -79,6 +79,15 @@ router.post('/stripe', express.raw({ type: 'application/json' }), async (req, re
         if (order) ordersDB.updateOrder(order.id, { status: 'payment_failed' });
         break;
       }
+
+      // ── Stripe Connect v2 — seller capability updated ────────
+      case 'v2.core.account[configuration.recipient].capability_status_updated': {
+        const { account, configuration } = event.data;
+        const capability = configuration?.recipient?.capabilities?.stripe_balance?.stripe_transfers;
+        console.log(`[Connect] Account ${account} recipient capability: ${capability?.status}`);
+        // TODO: update seller record in DB when capability is active
+        break;
+      }
     }
   } catch (err) {
     console.error('[Stripe Webhook] Handler error:', err);
@@ -140,6 +149,29 @@ router.post('/mercadopago', express.json(), async (req, res) => {
 
   } catch (err) {
     console.error('[MP Webhook] Error:', err.message);
+  }
+
+  res.json({ received: true });
+});
+
+// ── Stripe Connect v2 Event Destination ──────────────────────
+// Receives thin events: v2.core.account capability updates
+router.post('/stripe-v2', express.raw({ type: 'application/json' }), async (req, res) => {
+  let event;
+  try {
+    event = JSON.parse(req.body);
+  } catch {
+    return res.status(400).send('Invalid JSON');
+  }
+
+  console.log(`[Connect v2] event: ${event.type} | account: ${event.related_object?.id}`);
+
+  if (event.type === 'v2.core.account[configuration.recipient].capability_status_updated') {
+    const accountId = event.related_object?.id;
+    const status    = event.data?.configuration?.recipient?.capabilities
+                        ?.stripe_balance?.stripe_transfers?.status;
+    console.log(`[Connect v2] Account ${accountId} transfer capability: ${status}`);
+    // TODO: update seller record when status === 'active'
   }
 
   res.json({ received: true });
