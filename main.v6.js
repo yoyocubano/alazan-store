@@ -1135,9 +1135,9 @@ const AlazanAPI = {
                 const stripeBtn = document.querySelector('.payment-method[data-provider="stripe"]');
                 if (stripeBtn) stripeBtn.style.display = config.providers.stripe?.available ? '' : 'none';
 
-                // Show/hide MercadoPago button
+                // Hide MercadoPago — tokens not configured, always use Stripe
                 const mpBtn = document.querySelector('.payment-method[data-provider="mercadopago"]');
-                if (mpBtn) mpBtn.style.display = config.providers.mercadopago?.available ? '' : 'none';
+                if (mpBtn) mpBtn.style.display = 'none';
 
                 // Store country on modal for use at payment time
                 checkoutModal?.setAttribute('data-country', country);
@@ -1188,8 +1188,9 @@ const AlazanAPI = {
                 const cpfField   = document.getElementById('checkout-cpf');
                 const cpfValue   = cpfField?.value.trim() || '';
 
+                const errEl = document.getElementById('checkout-error-msg');
                 if (!nameField?.value || !emailField?.value || !addressField?.value || !cityField?.value || !zipField?.value) {
-                    alert(t('err_required'));
+                    if (errEl) { errEl.textContent = t('err_required'); errEl.style.display = 'block'; }
                     return;
                 }
 
@@ -1197,7 +1198,7 @@ const AlazanAPI = {
                 if (countryCode === 'BR') {
                     const cpfRegex = /^\d{3}\.\d{3}\.\d{3}-\d{2}$/;
                     if (!cpfRegex.test(cpfValue)) {
-                        alert(t('err_cpf'));
+                        if (errEl) { errEl.textContent = t('err_cpf'); errEl.style.display = 'block'; }
                         cpfField?.focus();
                         return;
                     }
