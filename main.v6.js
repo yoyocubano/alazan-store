@@ -1242,17 +1242,10 @@ const AlazanAPI = {
                 try {
                     let result;
 
-                    if (provider === 'mercadopago' && ['AR','BR','MX'].includes(countryCode)) {
-                        result = await AlazanAPI.checkoutMercadoPago({ items: cartItems, customer, countryCode });
-                        // Redirect to MercadoPago hosted checkout
-                        window.location.href = result.redirectUrl;
-                        return;
-                    } else {
-                        // Stripe — redirect to hosted checkout
-                        result = await AlazanAPI.checkoutStripe({ items: cartItems, customer, countryCode });
-                        window.location.href = result.redirectUrl;
-                        return;
-                    }
+                    // Always use Stripe — MercadoPago tokens not configured
+                    result = await AlazanAPI.checkoutStripe({ items: cartItems, customer, countryCode });
+                    window.location.href = result.redirectUrl;
+                    return;
 
                 } catch (err) {
                     console.error('[Alazan] Checkout error:', err.message);
@@ -1260,7 +1253,12 @@ const AlazanAPI = {
                     finalPayBtn.classList.remove('hidden');
                     document.querySelector('.payment-methods')?.classList.remove('hidden');
                     document.getElementById('checkout-form')?.classList.remove('hidden');
-                    alert(`${t('err_payment')} ${err.message}`);
+                    // Show error inline — no alert() blocking
+                    const errEl = document.getElementById('checkout-error-msg');
+                    if (errEl) {
+                        errEl.textContent = `${t('err_payment')} ${err.message}`;
+                        errEl.style.display = 'block';
+                    }
                 }
             });
         }
