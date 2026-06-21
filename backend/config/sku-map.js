@@ -59,12 +59,12 @@ const SKU_MAP = {
       }
     },
     printful: {
-      // Bella+Canvas 3001 Unisex Jersey Short Sleeve Tee
-      product_id: 71,
+      // Men's premium heavyweight combat guard — store product 424193426, catalog product 508
+      product_id: 508,
       variants: {
-        black: { XS: 4011, S: 4012, M: 4013, L: 4014, XL: 4015, XXL: 4016 },
-        white: { XS: 4017, S: 4018, M: 4019, L: 4020, XL: 4021, XXL: 4022 },
-        gray:  { XS: 4023, S: 4024, M: 4025, L: 4026, XL: 4027, XXL: 4028 }
+        black: { XS: 12756, S: 12756, M: 12757, L: 12758, XL: 12759, XXL: 12760 },
+        white: { XS: 12761, S: 12761, M: 12762, L: 12763, XL: 12764, XXL: 12765 },
+        gray:  { XS: 12756, S: 12756, M: 12757, L: 12758, XL: 12759, XXL: 12760 }
       }
     },
     gelato: {
@@ -106,11 +106,12 @@ const SKU_MAP = {
       }
     },
     printful: {
-      product_id: 146, // Gildan 18500 Heavy Blend Hooded Sweatshirt
+      // Unisex Hoodie — store product 424190790
+      product_id: 146,
       variants: {
-        black: { XS: 5300, S: 5301, M: 5302, L: 5303, XL: 5304, XXL: 5305 },
-        white: { XS: 5306, S: 5307, M: 5308, L: 5309, XL: 5310, XXL: 5311 },
-        gray:  { XS: 5312, S: 5313, M: 5314, L: 5315, XL: 5316, XXL: 5317 }
+        black: { XS: 10779, S: 10779, M: 10780, L: 10781, XL: 10782, XXL: 10783 },
+        white: { XS: 10774, S: 10774, M: 10775, L: 10776, XL: 10777, XXL: 10778 },
+        gray:  { XS: 10779, S: 10779, M: 10780, L: 10781, XL: 10782, XXL: 10783 }
       }
     }
   },
