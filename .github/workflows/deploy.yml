@@ -3,6 +3,12 @@ name: Deploy to IONOS
 on:
   push:
     branches: [main]
+    paths:
+      - 'index.html'
+      - 'main.v6.js'
+      - 'assets/**'
+      - 'images/**'
+      - '*.css'
 
 jobs:
   deploy:
@@ -10,15 +16,28 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Deploy frontend to IONOS via SFTP (lftp mirror)
+      - name: Deploy frontend to IONOS via SFTP
         uses: wlixcc/SFTP-Deploy-Action@v1.2.4
         with:
           server: ${{ secrets.IONOS_HOST }}
           username: ${{ secrets.IONOS_USER }}
           password: ${{ secrets.IONOS_PASSWORD }}
           port: 22
-          local_path: './'
+          local_path: './index.html'
           remote_path: '/alazanstore.shop/public'
-          sftp_only: false
+          sftp_only: true
+          args: '-o StrictHostKeyChecking=no'
+          delete_remote_files: false
+
+      - name: Deploy JS to IONOS via SFTP
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+        with:
+          server: ${{ secrets.IONOS_HOST }}
+          username: ${{ secrets.IONOS_USER }}
+          password: ${{ secrets.IONOS_PASSWORD }}
+          port: 22
+          local_path: './main.v6.js'
+          remote_path: '/alazanstore.shop/public'
+          sftp_only: true
           args: '-o StrictHostKeyChecking=no'
           delete_remote_files: false
