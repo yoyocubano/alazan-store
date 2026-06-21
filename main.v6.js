@@ -1216,20 +1216,26 @@ const AlazanAPI = {
 
                 // USD prices: ARS 34900 → ~$36.74 USD at 950 rate
                 const RATE_ARS = 950;
-                const cartItems = cart.map(item => ({
-                    id:          item.id,
-                    name:        item.title,
-                    quantity:    1,
-                    priceUSD:    parseFloat((item.price / RATE_ARS).toFixed(2)),
-                    color:       item.color,
-                    colorHex:    item.colorHex || '#000000',
-                    size:        item.size || 'M',
-                    garmentType: item.type === 'kids'  ? 'kids' :
-                                 item.id.includes('hoodie') ? 'hoodie' :
-                                 item.id.includes('sweat')  ? 'sweatshirt' : 'tshirt',
-                    imageUrl:    item.img ? new URL(item.img, window.location.href).href : undefined,
-                    graphicUrl:  item.img ? new URL(item.img, window.location.href).href : undefined
-                }));
+                const GARMENT_LABEL = { tshirt: 'T-Shirt 240 GSM', sweatshirt: 'Sudadera 380 GSM', hoodie: 'Hoodie 380 GSM', kids: 'Camiseta Kids' };
+                const cartItems = cart.map(item => {
+                    const gt = item.type === 'kids' ? 'kids' :
+                               item.type === 'sweatshirt' ? 'sweatshirt' :
+                               item.type === 'hoodie' ? 'hoodie' : 'tshirt';
+                    const label = GARMENT_LABEL[gt] || 'T-Shirt';
+                    const BASE = 'https://alazanstore.shop/';
+                    return {
+                        id:          item.id,
+                        name:        `${item.title} · ${label} · Talla ${item.size || 'M'} · ${item.color || 'Negro'}`,
+                        quantity:    1,
+                        priceUSD:    parseFloat((item.price / RATE_ARS).toFixed(2)),
+                        color:       item.color,
+                        colorHex:    item.colorHex || '#000000',
+                        size:        item.size || 'M',
+                        garmentType: gt,
+                        imageUrl:    item.img ? new URL(item.img, BASE).href : `${BASE}og-image.png`,
+                        graphicUrl:  item.img ? new URL(item.img, BASE).href : undefined
+                    };
+                });
 
                 // Determine selected provider
                 const activeMethod = document.querySelector('.payment-method.active');
