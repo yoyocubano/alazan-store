@@ -6,10 +6,8 @@ on:
     branches: [main]
     paths:
       - 'index.html'
+      - 'styles.css'
       - 'main.v6.js'
-      - 'assets/**'
-      - 'images/**'
-      - '*.css'
 
 jobs:
   deploy:
@@ -17,7 +15,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Deploy frontend to IONOS via SFTP
+      - name: Deploy index.html to IONOS
+        if: contains(github.event.commits[0].modified, 'index.html') || github.event_name == 'workflow_dispatch'
         uses: wlixcc/SFTP-Deploy-Action@v1.2.4
         with:
           server: ${{ secrets.IONOS_HOST }}
@@ -28,17 +27,22 @@ jobs:
           remote_path: '/alazanstore.shop/public'
           sftp_only: true
           args: '-o StrictHostKeyChecking=no'
-          delete_remote_files: false
 
-      - name: Deploy JS to IONOS via SFTP
+      - name: Deploy styles.css to IONOS
+        if: contains(github.event.commits[0].modified, 'styles.css') || github.event_name == 'workflow_dispatch'
         uses: wlixcc/SFTP-Deploy-Action@v1.2.4
         with:
           server: ${{ secrets.IONOS_HOST }}
           username: ${{ secrets.IONOS_USER }}
           password: ${{ secrets.IONOS_PASSWORD }}
           port: 22
-          local_path: './main.v6.js'
+          local_path: './styles.css'
           remote_path: '/alazanstore.shop/public'
           sftp_only: true
           args: '-o StrictHostKeyChecking=no'
-          delete_remote_files: false
+
+      - name: Purge jsDelivr CDN cache for main.v6.js
+        if: contains(github.event.commits[0].modified, 'main.v6.js') || github.event_name == 'workflow_dispatch'
+        run: |
+          curl -s "https://purge.jsdelivr.net/gh/yoyocubano/alazan-store@main/main.v6.js"
+          echo "CDN purged"
