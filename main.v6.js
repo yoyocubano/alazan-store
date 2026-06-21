@@ -468,6 +468,7 @@ const AlazanAPI = {
         try {
             initProducts();
             initUI();
+            initSearch();
             initCart();
             initCursor();
             initLegalModal();
@@ -675,7 +676,7 @@ const AlazanAPI = {
                                 <h4>${p.name}</h4>
                                 <p>${typeTag}</p>
                             </div>
-                            <div class="product-price" style="opacity:0.4;">— ARS</div>
+                            <div class="product-price" style="opacity:0.4;font-size:.65rem;letter-spacing:.12em;">PRÓXIMAMENTE</div>
                         </div>
                         <button class="add-to-cart-btn" disabled style="opacity:0.35;cursor:not-allowed;">COMING SOON</button>
                     </div>
@@ -793,11 +794,72 @@ const AlazanAPI = {
         });
     }
 
+    function initSearch() {
+        const searchBtn = document.querySelector('[data-i18n="nav_search"]');
+        if (!searchBtn) return;
+
+        // Create search overlay
+        const overlay = document.createElement('div');
+        overlay.id = 'search-overlay';
+        overlay.innerHTML = `
+            <div class="search-inner">
+                <button class="search-close" id="search-close" aria-label="Cerrar búsqueda">✕</button>
+                <input type="text" id="search-input" placeholder="Buscar productos..." autocomplete="off" autofocus>
+                <div id="search-results"></div>
+            </div>`;
+        overlay.style.cssText = `display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);z-index:9999;align-items:flex-start;justify-content:center;padding-top:100px;`;
+        document.body.appendChild(overlay);
+
+        const style = document.createElement('style');
+        style.textContent = `
+            #search-overlay { display:none; }
+            #search-overlay.open { display:flex !important; }
+            .search-inner { width:100%;max-width:600px;padding:0 20px;position:relative; }
+            #search-input { width:100%;background:transparent;border:none;border-bottom:1px solid #fff;color:#fff;font-size:clamp(1.2rem,3vw,2rem);padding:12px 0;outline:none;font-family:inherit;letter-spacing:.05em; }
+            #search-input::placeholder { color:#666; }
+            .search-close { position:absolute;top:-50px;right:20px;background:none;border:none;color:#fff;font-size:1.5rem;cursor:pointer; }
+            #search-results { margin-top:30px;display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:16px; }
+            .search-result-card { background:#111;padding:12px;cursor:pointer;transition:background .2s; }
+            .search-result-card:hover { background:#222; }
+            .search-result-card img { width:100%;aspect-ratio:1;object-fit:cover;margin-bottom:8px; }
+            .search-result-name { color:#fff;font-size:.75rem;letter-spacing:.05em; }
+            .search-result-price { color:#999;font-size:.7rem;margin-top:4px; }
+            .search-no-results { color:#666;font-size:.9rem;letter-spacing:.1em; }
+        `;
+        document.head.appendChild(style);
+
+        searchBtn.addEventListener('click', (e) => { e.preventDefault(); overlay.classList.add('open'); document.getElementById('search-input').focus(); });
+        document.getElementById('search-close').addEventListener('click', () => overlay.classList.remove('open'));
+        overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.classList.remove('open'); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') overlay.classList.remove('open'); });
+
+        document.getElementById('search-input').addEventListener('input', (e) => {
+            const q = e.target.value.trim().toLowerCase();
+            const results = document.getElementById('search-results');
+            if (!q) { results.innerHTML = ''; return; }
+            const matches = characterData.filter(p => !p.comingSoon && (p.name.toLowerCase().includes(q) || (p.fighter && p.fighter.toLowerCase().includes(q))));
+            if (!matches.length) { results.innerHTML = `<p class="search-no-results">Sin resultados para "${e.target.value}"</p>`; return; }
+            results.innerHTML = matches.slice(0,12).map(p => `
+                <div class="search-result-card" data-id="${p.id}">
+                    <img src="${p.baseImg}" alt="${p.name}" loading="lazy">
+                    <div class="search-result-name">${p.name}</div>
+                    <div class="search-result-price">${p.price ? p.price.toLocaleString('es-AR') + ' ARS' : ''}</div>
+                </div>`).join('');
+            results.querySelectorAll('.search-result-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    overlay.classList.remove('open');
+                    const el = document.querySelector(`[data-product-id="${card.dataset.id}"]`);
+                    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                });
+            });
+        });
+    }
+
     function initUI() {
         const openMenuBtn = document.getElementById('open-menu');
         const closeMenuBtn = document.getElementById('close-menu');
         const zaraMenu = document.getElementById('zara-menu');
-        
+
         if(openMenuBtn && closeMenuBtn && zaraMenu) {
             openMenuBtn.addEventListener('click', () => zaraMenu.classList.add('open'));
             closeMenuBtn.addEventListener('click', () => zaraMenu.classList.remove('open'));
