@@ -6,6 +6,20 @@ const stripeService = require('../services/stripe');
 const mpService     = require('../services/mercadopago');
 const ordersDB      = require('../db/orders');
 
+// Server-side price catalog in USD cents — never trust client amounts
+// ARS prices / 950 exchange rate, rounded to cents
+const PRODUCT_PRICES_USD = {
+  tshirt:     3674,   // 34,900 ARS / 950 = $36.74
+  sweatshirt: 5779,   // 54,900 ARS / 950 = $57.79
+  hoodie:     6832,   // 64,900 ARS / 950 = $68.32
+  kids:       2621,   // 24,900 ARS / 950 = $26.21
+};
+
+function getServerPrice(item) {
+  const type = item.garmentType || item.type;
+  return PRODUCT_PRICES_USD[type] || null;
+}
+
 // ── POST /api/checkout/stripe ─────────────────────────────────
 // Creates a Stripe Checkout Session and returns the redirect URL
 // Body: { items, customer, countryCode }
@@ -15,6 +29,13 @@ router.post('/stripe', async (req, res, next) => {
 
     if (!items?.length) return res.status(400).json({ error: 'Cart is empty' });
     if (!customer?.email) return res.status(400).json({ error: 'Customer email required' });
+
+    // Validate and enforce server-side prices — ignore client priceUSD
+    for (const item of items) {
+      const serverCents = getServerPrice(item);
+      if (!serverCents) return res.status(400).json({ error: `Unknown product type: ${item.garmentType || item.type}` });
+      item.priceUSD = serverCents / 100;
+    }
 
     const totalUSD = items.reduce((s, i) => s + (i.priceUSD * (i.quantity || 1)), 0);
 
